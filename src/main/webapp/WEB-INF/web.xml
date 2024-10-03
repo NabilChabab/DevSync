@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakarta.ee/web-app_5_0.xsd"
          version="5.0">
+
+
+
 
   <servlet>
     <servlet-name>UserServlet</servlet-name>
-    <servlet-class>org.example.controller.UserServlet</servlet-class>
+    <servlet-class>org.example.controller.user.UserServlet</servlet-class>
+
     <multipart-config>
       <location></location>
       <max-file-size>20848820</max-file-size>
@@ -14,11 +18,30 @@
       <file-size-threshold>1048576</file-size-threshold>
     </multipart-config>
   </servlet>
+
   <servlet-mapping>
     <servlet-name>UserServlet</servlet-name>
-    <url-pattern>/users</url-pattern>
+    <url-pattern>/user/dashboard</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>org.example.controller.auth.LoginServlet</servlet-class>
+  </servlet>
 
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/auth/login</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ManagerServlet</servlet-name>
+    <servlet-class>org.example.controller.manager.ManagerServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ManagerServlet</servlet-name>
+    <url-pattern>/manager/dashboard</url-pattern>
+  </servlet-mapping>
 
 </web-app>
