@@ -73,7 +73,7 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link @yield('dashboard-active')" href="">
+                <a class="nav-link active" href="">
                     <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
                         <i class="bx bx-home text-primary text-sm opacity-10"></i>
@@ -81,47 +81,7 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link @yield('Users-active')" href="">
-                    <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
-                        <i class="bx bx-user text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Evento Users</span>
-                </a>
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link @yield('Events-active')" href="">
-                    <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
-                        <i class="bx bxs-right-arrow text-success text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Events</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link @yield('Booking-active')" href="">
-                    <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
-                        <i class="bx bxs-check-circle text-info text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Booking</span>
-                </a>
-            </li>
-
-            <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link @yield('Profile-active')" href="">
-                    <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
-                        <i class="bx bxs-user-circle text-dark text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Profile</span>
-                </a>
-            </li>
 
         </ul>
     </div>
@@ -136,7 +96,7 @@
                 <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                     <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white"
                                                            href="javascript:;">Pages</a></li>
-                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Dashboard</li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">To Dos</li>
                 </ol>
                 <h6 class="font-weight-bolder text-white mb-0">Dashboard</h6>
             </nav>
@@ -155,7 +115,11 @@
 
                             <img src="images/me.jpg" alt="" srcset=""
                                  style="width: 40px;height:40px;border-radius:50%;margin-right:10px;">
-                            <span class="d-sm-inline d-none">Logout</span>
+
+                            <form action="login" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to logout?');">
+                                <input type="hidden" name="_logout" value="logout">
+                                <button style="border: none;border: none;background-color: transparent"><span class="d-sm-inline d-none text-white">Logout</span></button>
+                            </form>
                         </a>
 
                         <form id="logout-form" action="" method="POST" class="d-none">
@@ -267,11 +231,7 @@
     <!-- End Navbar -->
     <div class="container-fluid py-4">
         <div class="row">
-            <%
-                List<User> lastUsers = (List<User>) request.getAttribute("last_users");
-                if (lastUsers != null && !lastUsers.isEmpty()) {
-                    for (User user : lastUsers) {
-            %>
+
             <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
 
                 <div class="card" style="background-color:#161718;">
@@ -280,10 +240,10 @@
                             <div class="col-8">
                                 <div class="numbers">
                                     <p class="text-sm mb-0 font-weight-bold">
-                                        <%= user.getEmail() %>
+                                        email
                                     </p>
                                     <h5 class="font-weight-bolder">
-                                        <%= user.getName() %>
+                                        name
                                     </h5>
                                     <p class="mb-0">
                                     <span class="text-success text-sm font-weight-bolder">
@@ -306,14 +266,7 @@
 
 
             </div>
-            <%
-                }
-            } else {
-            %>
-            <p>No last users found.</p>
-            <%
-                }
-            %>
+
 
         </div>
 
@@ -360,15 +313,11 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <%
-                                        List<User> users = (List<User>) request.getAttribute("users");
-                                        if (users != null && !users.isEmpty()) {
-                                            for (User user : users) {
-                                    %>
+
                                     <tr>
-                                        <td><%= user.getId() %></td>
+                                        <td>user</td>
                                         <td class="align-middle text-center d-flex justify-content-center align-items-center">
-                                            <img src="<%= user.getProfile() %>" class="avatar avatar-sm" alt="user" style="object-fit: cover;">
+                                            <img src="images/me.jpg" class="avatar avatar-sm" alt="user" style="object-fit: cover;">
                                         </td>
                                         <td class="align-middle text-center"><%= user.getEmail() %></td>
                                         <td class="align-middle text-center">loc</td>
@@ -376,34 +325,23 @@
                                             <span class="text-secondary text-xs font-weight-bold">created</span>
                                         </td>
                                         <td class="align-middle text-center">
-    <span class="badge badge-sm <%= user.getRole() == UserRole.MANAGER ? "bg-gradient-success" : "bg-gradient-warning" %>">
-        <%= user.getRole() %>
+    <span class="badge badge-sm bg-gradient-success">
+Role
     </span>
                                         </td>
                                         <td class="align-middle text-center">
                                             <a href="#" class="status-badge me-3" data-bs-toggle="modal"
                                                data-bs-target="#updateUser">
-                                                <button class="badge badge-sm bg-gradient-primary text-center" style="border: none" data-user_name="<%= user.getName() %>" data-user_email="<%= user.getEmail() %>" data-user_phone="<%= user.getPhone() %>" data-user_id="<%= user.getId() %>" data-bs-toggle="modal" data-bs-target="#updateUser">Update</button>
+                                                <button class="badge badge-sm bg-gradient-primary text-center" style="border: none" >Update</button>
                                             </a>
                                             <form action="users" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                <input type="hidden" name="id" value="<%= user.getId() %>">
+                                                <input type="hidden" name="id" >
                                                 <input type="hidden" name="_method" value="delete">
                                                 <button class="badge badge-sm bg-gradient-danger text-center" style="border: none">Delete</button>
                                             </form>
                                         </td>
                                     </tr>
-                                    <%
-                                        }
-                                    } else {
-                                    %>
-                                    <tr>
-                                        <td colspan="7" class="align-middle text-center">
-                                            No users available
-                                        </td>
-                                    </tr>
-                                    <%
-                                        }
-                                    %>
+
                                     </tbody>
 
                                 </table>
@@ -433,7 +371,11 @@
                             <input type="text" id="name" name="name" class="form-control bg-transparent" placeholder="Name">
                                 <input type="text" id="email" name="email" class="form-control bg-transparent mt-3" placeholder="exemple@gmail.com">
                                 <input type="text" id="phone" name="phone"  class="form-control bg-transparent mt-3" placeholder="Phone Number">
-
+                                <input type="password"  id="password" name="password"  class="form-control bg-transparent mt-3" placeholder="Password">
+                                <select type="text"  id="role" name="role"  class="form-control bg-transparent mt-3" placeholder="Phone Number">
+                                    <option value="MANAGER">MANAGER</option>
+                                    <option value="USER">USER</option>
+                                </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </form>
@@ -455,6 +397,8 @@
                                 <input type="text" id="username" name="name" class="form-control bg-transparent text-white" placeholder="Name">
                                 <input type="text" id="useremail"  name="email" class="form-control bg-transparent mt-3 text-white" placeholder="exemple@gmail.com">
                                 <input type="text"  id="phonenumber" name="phone"  class="form-control bg-transparent mt-3 text-white" placeholder="Phone Number">
+
+
                             </div>
                             <button type="submit" class="btn btn-primary">Update</button>
                         </form>
