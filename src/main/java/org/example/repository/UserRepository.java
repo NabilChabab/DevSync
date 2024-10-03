@@ -103,5 +103,18 @@ public class UserRepository {
         return users;
     }
 
+    public User findByEmail(String email) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            return entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
+
 
 }
