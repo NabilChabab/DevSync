@@ -100,7 +100,6 @@
 
     body {
         height: 100vh;
-        background-image: url('images/eventobg.jpg');
         width: 100%;
         background-position: center;
         background-size: cover;
