@@ -10,7 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import org.example.models.User;
 import org.example.models.enums.UserRole;
-import org.example.repository.UserRepository;
+import org.example.repository.interfaces.UserRepository;
+import org.example.repository.UserRepositoryImpl;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,7 +29,7 @@ import java.util.List;
 )
 public class ManagerServlet extends HttpServlet {
 
-    private UserRepository userRepository = new UserRepository();
+    private UserRepository userRepository = new UserRepositoryImpl();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

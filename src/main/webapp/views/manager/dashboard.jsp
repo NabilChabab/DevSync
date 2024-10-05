@@ -79,6 +79,15 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="tasks">
+                    <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
+                        <i class="bx bx-task text-danger text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Tasks</span>
+                </a>
+            </li>
 
 
         </ul>
@@ -111,7 +120,7 @@
                         <a class="nav-link text-white font-weight-bold px-0" href=""
                         >
 
-                            <img src="${pageContext.request.contextPath}/public/images/me.jpg" alt="" srcset=""
+                            <img src="${pageContext.request.contextPath}/${sessionScope.user.profile}" alt="" srcset=""
                                  style="width: 40px;height:40px;border-radius:50%;margin-right:10px;">
 
                             <form action="../auth/login" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to logout?');">
@@ -294,7 +303,7 @@
                                     <option value="USER">USER</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="submit" class="btn btn-primary" style="float: right">Create</button>
                         </form>
                     </div>
                 </div>

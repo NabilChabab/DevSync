@@ -3,13 +3,16 @@ package org.example.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.models.enums.Status;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Task {
@@ -29,7 +32,12 @@ public class Task {
     private Status status;
 
     @Column(nullable = false)
-    private LocalDateTime deadline;
+    private LocalDate startDate;
+
+    @Column(nullable = false)
+    private LocalDate endDate;
+
+    private String file;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
