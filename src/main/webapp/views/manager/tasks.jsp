@@ -419,14 +419,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" style="background-color:#161718;">
-                        <form action="../manager/dashboard" method="post" enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <input type="hidden" name="user_id" id="user_id">
-                                <input type="text" id="username2" name="username" class="form-control bg-transparent text-white" placeholder="Name">
-                                <input type="text" id="useremail"  name="email" class="form-control bg-transparent mt-3 text-white" placeholder="exemple@gmail.com">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </form>
+
                     </div>
                 </div>
             </div>
