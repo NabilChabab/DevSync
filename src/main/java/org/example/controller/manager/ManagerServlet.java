@@ -1,7 +1,9 @@
 package org.example.controller.manager;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,8 +16,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 
+
+@WebServlet(name = "ManagerServlet", value = "/manager/dashboard")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 10,
@@ -40,30 +45,34 @@ public class ManagerServlet extends HttpServlet {
     }
 
     public void save(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String name = request.getParameter("name");
+        String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String phone = request.getParameter("phone");
         String role = request.getParameter("role");
+        LocalDateTime createdAt = LocalDateTime.now();
+        LocalDateTime updatedAt = LocalDateTime.now();
 
         Part filePart = request.getPart("profile");
         String fileName = System.currentTimeMillis() + "_" + Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
-        Path uploadPath = Paths.get(getServletContext().getRealPath("uploads"));
+        Path uploadPath = Paths.get(getServletContext().getRealPath("public/uploads"));
         Files.createDirectories(uploadPath);
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(filePart.getInputStream(), filePath);
 
+        // Hash the password using bcrypt
+        String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+
         User user = new User();
-        user.setName(name);
+        user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(password);
-        user.setPhone(phone);
+        user.setPassword(hashedPassword);  // Use the hashed password
         user.setRole(UserRole.valueOf(role));
-        user.setProfile("uploads/" + fileName);
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(updatedAt);
+        user.setProfile("public/uploads/" + fileName);
 
         userRepository.save(user);
-
 
         response.sendRedirect(request.getContextPath() + "/manager/dashboard");
     }
@@ -76,19 +85,17 @@ public class ManagerServlet extends HttpServlet {
         request.setAttribute("users", users);
         request.setAttribute("last_users", lastUsers);
 
-        request.getRequestDispatcher("/manager/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/manager/dashboard.jsp").forward(request, response);
     }
 
     public void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(request.getParameter("user_id"));
-        String name = request.getParameter("name");
+        String username = request.getParameter("username");
         String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
 
         User user = userRepository.findById(id);
-        user.setName(name);
+        user.setUsername(username);
         user.setEmail(email);
-        user.setPhone(phone);
         userRepository.update(user);
 
         response.sendRedirect(request.getContextPath() + "/manager/dashboard");

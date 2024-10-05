@@ -45,14 +45,14 @@
         rel="stylesheet">
 
     <!-- Vendor CSS Files -->
-    <link href="${pageContext.request.contextPath}/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/assets/vendor/aos/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/user/css/styles.css">
+    <link href="${pageContext.request.contextPath}/public/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/public/assets/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/public/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/public/user/css/styles.css">
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <style>
@@ -274,21 +274,21 @@
 
 
 
-<script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="${pageContext.request.contextPath}/assets/vendor/swiper/swiper-bundle.min.js"></script>
-<script src="${pageContext.request.contextPath}/assets/vendor/glightbox/js/glightbox.min.js"></script>
-<script src="${pageContext.request.contextPath}/assets/vendor/aos/aos.js"></script>
-<script src="${pageContext.request.contextPath}/assets/vendor/php-email-form/validate.js"></script>
+<script src="${pageContext.request.contextPath}/public/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/public/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/public/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="${pageContext.request.contextPath}/public/assets/vendor/aos/aos.js"></script>
+<script src="${pageContext.request.contextPath}/public/assets/vendor/php-email-form/validate.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
 <!-- Template Main JS File -->
-<script src="${pageContext.request.contextPath}/assets/js/main.js"></script>
-<script src="${pageContext.request.contextPath}/js/form.js"></script>
-<script src="${pageContext.request.contextPath}/js/login.js"></script>
-<script src="${pageContext.request.contextPath}/js/search.js"></script>
+<script src="${pageContext.request.contextPath}/public/assets/js/main.js"></script>
+<script src="${pageContext.request.contextPath}/public/js/form.js"></script>
+<script src="${pageContext.request.contextPath}/public/js/login.js"></script>
+<script src="${pageContext.request.contextPath}/public/js/search.js"></script>
 
 
 

@@ -1,6 +1,7 @@
 package org.example.controller.auth;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +11,8 @@ import org.example.repository.UserRepository;
 
 import java.io.IOException;
 
+
+@WebServlet(name = "LoginServlet", value = "/auth/login")
 public class LoginServlet extends HttpServlet {
     private UserRepository userRepository = new UserRepository();
 
@@ -31,7 +34,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (hasErrors) {
-            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
             return;
         }
 
@@ -48,7 +51,7 @@ public class LoginServlet extends HttpServlet {
             }
         } else {
             request.setAttribute("loginError", "Invalid email or password.");
-            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
         }
     }
 
@@ -56,7 +59,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {

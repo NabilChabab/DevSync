@@ -24,24 +24,6 @@
     <url-pattern>/user/dashboard</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>LoginServlet</servlet-name>
-    <servlet-class>org.example.controller.auth.LoginServlet</servlet-class>
-  </servlet>
 
-  <servlet-mapping>
-    <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>/auth/login</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
-    <servlet-name>ManagerServlet</servlet-name>
-    <servlet-class>org.example.controller.manager.ManagerServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>ManagerServlet</servlet-name>
-    <url-pattern>/manager/dashboard</url-pattern>
-  </servlet-mapping>
 
 </web-app>
