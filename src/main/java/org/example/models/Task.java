@@ -46,7 +46,7 @@ public class Task {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
