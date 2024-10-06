@@ -1,39 +1,43 @@
 package org.example.models;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.models.enums.UserRole;
+import org.example.models.enums.Status;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "tasks")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class User {
+@NoArgsConstructor
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false)
+    private String title;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private String profile;
-
     @Enumerated(EnumType.STRING)
+    private Status status;
+
     @Column(nullable = false)
-    private UserRole role;
+    private LocalDate startDate;
+
+    @Column(nullable = false)
+    private LocalDate endDate;
+
+    private String file;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -41,6 +45,11 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private User manager;
 }

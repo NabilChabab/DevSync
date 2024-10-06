@@ -8,16 +8,19 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import lombok.NoArgsConstructor;
 import org.example.models.User;
+import org.example.models.enums.UserRole;
+import org.example.repository.interfaces.UserRepository;
 
 import java.util.List;
 
 @NoArgsConstructor
-public class UserRepository {
+public class UserRepositoryImpl implements UserRepository {
 
 
     private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("default");
 
 
+    @Override
     public void save(User user) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -36,6 +39,7 @@ public class UserRepository {
     }
 
 
+    @Override
     public List<User> findAll() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -45,6 +49,7 @@ public class UserRepository {
         }
     }
 
+    @Override
     public User findById(Long id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -54,6 +59,7 @@ public class UserRepository {
         }
     }
 
+    @Override
     public void update(User user) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -71,6 +77,7 @@ public class UserRepository {
         }
     }
 
+    @Override
     public void delete(Long id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -90,6 +97,7 @@ public class UserRepository {
     }
 
 
+    @Override
     public List<User> findLastFoor() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<User> users = null;
@@ -103,6 +111,7 @@ public class UserRepository {
         return users;
     }
 
+    @Override
     public User findByEmail(String email) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -111,6 +120,18 @@ public class UserRepository {
                     .getSingleResult();
         } catch (Exception e) {
             return null;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<User> findByRole(UserRole role) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            return entityManager.createQuery("SELECT u FROM User u WHERE u.role = :role", User.class)
+                    .setParameter("role", role)
+                    .getResultList();
         } finally {
             entityManager.close();
         }
