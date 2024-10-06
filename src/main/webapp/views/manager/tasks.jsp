@@ -115,6 +115,10 @@
     .file-upload-label .icon {
         margin-right: 8px; /* Space between icon and text */
     }
+
+    li:hover {
+        background-color: #5E72E4;
+    }
 </style>
 <body class="g-sidenav-show" style="background-color:#161718;">
 <div class="min-height-300 position-absolute w-100" style="background-color:rgb(112, 1, 1);"></div>
@@ -249,7 +253,7 @@
                                 <div class="col-4 text-end">
                                     <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
                                         <a href="#">
-                                            <img src="${pageContext.request.contextPath}/${task.user.profile}" alt="user-avatar" class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                            <img src="${pageContext.request.contextPath}/${task.user.profile ? task.user.profile : 'public/images/avatar.jfif'}" alt="user-avatar" class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
                                         </a>
                                     </div>
                                 </div>
@@ -275,9 +279,9 @@
                                data-bs-target="#addTask">New Task</a>
 
                         </div>
-                        <div class="card-body px-0 pt-0 pb-2">
+                        <div class="card-body px-0 pt-0 pb-2" style="height: 100vh;">
                             <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0">
+                                <table class="table align-items-center mb-0" style="height: auto">
                                     <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -310,23 +314,67 @@
                                             <td>${task.id}</td>
                                             <td class="align-middle text-center">${task.title}</td>
                                             <td class="align-middle text-center">
-                                            <span class="badge badge-sm bg-gradient-warning">
+                                                <span class="badge badge-sm bg-gradient-warning">
                                                     ${task.status}
-                                            </span>
+                                                </span>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span class="text-secondary text-xs font-weight-bold">${task.startDate}</span>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span class="text-secondary text-xs font-weight-bold">${task.endDate}</span>
-
-                                            <td class="d-flex justify-content-start">
-                                                <img src="${pageContext.request.contextPath}/${task.user.profile}" class="avatar avatar-sm me-2" alt="user" style="object-fit: cover;">
-                                            <div class="d-flex flex-column align-items-start">
-                                                <span class="text-secondary text-xs font-weight-bold">${task.user.username}</span>
-                                                <span class="text-secondary text-xs font-weight-normal">${task.user.email}</span>
-                                            </div>
                                             </td>
+                                            <form method="POST" action="${pageContext.request.contextPath}/manager/tasks">
+                                                <td class="d-flex align-items-center">
+                                                    <c:if test="${not empty task.user.profile}">
+                                                        <img src="${pageContext.request.contextPath}/${task.user.profile}"
+                                                             class="avatar avatar-sm me-2 border-radius-2xl profilee"
+                                                             alt="user"
+                                                             style="object-fit: cover; width: 40px; height: 40px;">
+                                                    </c:if>
+                                                    <c:if test="${empty task.user.profile}">
+                                                        <img src="${pageContext.request.contextPath}/public/images/avatar.jfif"
+                                                             class="avatar avatar-sm me-2 border-radius-2xl profilee"
+                                                             alt="user"
+                                                             style="object-fit: cover; width: 40px; height: 40px;">
+                                                    </c:if>
+
+                                                    <div class="d-flex flex-column align-items-start ms-2">
+            <span class="text-secondary text-xs font-weight-bold" id="usernamee">
+                    ${not empty task.user.username ? task.user.username : 'unassigned'}
+            </span>
+                                                        <span class="text-secondary text-xs">------</span>
+                                                    </div>
+
+                                                    <div class="dropdown ms-3">
+                                                        <button class="btn btn-primary bg-transparent dropdown-toggle p-0" type="button" data-bs-toggle="dropdown"></button>
+                                                        <ul class="dropdown-menu custom-menu">
+                                                            <c:forEach var="user" items="${users}">
+                                                                <li>
+                                                                    <a class="dropdown-item custom-item" href="#"
+                                                                       data-profilee="${pageContext.request.contextPath}/${user.profile}"
+                                                                       data-usernamee="${user.username}"
+                                                                       data-userIdd="${user.id}"
+                                                                       onclick="updateProfileImageTable(event, this);">
+                                                                        <img src="${pageContext.request.contextPath}/${user.profile}" alt="${user.username}" class="profile-img">
+                                                                        <span>${user.username}</span>
+                                                                    </a>
+                                                                </li>
+                                                            </c:forEach>
+                                                        </ul>
+                                                    </div>
+
+                                                    <input type="hidden" id="user_id1" name="userId">
+                                                    <input type="hidden" name="task_id" value="${task.id}">
+                                                    <button type="submit" class="border-radius-2xl bg-success ms-5" style="border: none; display: none">
+                                                        <i class="bx bx-check text-white"></i>
+                                                    </button>
+                                                </td>
+                                            </form>
+
+
+
+
                                             <td class="align-middle text-center">
                                                 <form action="${pageContext.request.contextPath}/manager/tasks" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                     <input type="hidden" name="id" value="${task.id}">
@@ -396,11 +444,11 @@
                                 </div>
 
                                 <div class="file-upload-container mt-3 d-flex align-items-center justify-content-start">
-                                    <input type="file" name="file" id="file" class="file-upload" required>
+                                    <input type="file" name="file" id="file" class="file-upload">
                                     <label for="file" class="file-upload-label border-0">
                                         <i class="bx bx-file text-primary opacity-10" style="font-size: 30px"></i>
                                     </label>
-                                    <span id="file-selected" class="text-secondary">Aucun fichier n’a été sélectionné</span>
+                                    <span id="file-selected" class="text-secondary">No file selected</span>
                                 </div>
 
 
@@ -514,8 +562,9 @@
 </script>
 
 <script>
+
     function updateProfileImage(event) {
-        event.preventDefault();  // Prevent the link from redirecting
+        event.preventDefault();
         const profileImgSrc = event.currentTarget.getAttribute('data-profile');
         const selectedProfileImg = document.getElementById('selectedProfileImg');
         const username = event.currentTarget.getAttribute('data-username');
@@ -526,6 +575,28 @@
         dropdownButton.innerText = `Assigned to ` + username;
         userIdInput.value = userId;
     }
+    function updateProfileImageTable(event, dropdownItem) {
+        event.preventDefault();
+
+        const taskCell = dropdownItem.closest('td');
+
+        const imgElement = taskCell.querySelector('.profilee');
+        const usernameElement = taskCell.querySelector('#usernamee');
+
+        const profileImgSrc = dropdownItem.getAttribute('data-profilee');
+        imgElement.src = profileImgSrc;
+
+        const username = dropdownItem.getAttribute('data-usernamee');
+        usernameElement.innerText = username === 'unassigned' ? 'unassigned' : username;
+
+        const userId = dropdownItem.getAttribute('data-userIdd');
+        const userIdInput = taskCell.querySelector('#user_id1');
+        userIdInput.value = userId;
+
+        const submitBtn = taskCell.querySelector('button[type="submit"]');
+        submitBtn.style.display = userId ? 'block' : 'none';
+    }
+
 </script>
 
 <script>
@@ -536,7 +607,7 @@
         if (fileInput.files.length > 0) {
             fileSelectedText.textContent = fileInput.files[0].name;
         } else {
-            fileSelectedText.textContent = "Aucun fichier n’a été sélectionné";
+            fileSelectedText.textContent = "No file selected";
         }
     });
 </script>
