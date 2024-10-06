@@ -39,10 +39,8 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Retrieve user by email
         User user = userRepository.findByEmail(email);
 
-        // Verify the password
         if (user != null && BCrypt.verifyer().verify(password.toCharArray(), user.getPassword()).verified) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);

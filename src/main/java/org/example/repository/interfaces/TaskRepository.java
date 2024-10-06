@@ -18,4 +18,6 @@ public interface TaskRepository {
     List<Task> findLastFoor();
 
     List<Task> findByUserId(Long userId);
+
+    void updateUserId(Long userId, Long taskId);
 }
