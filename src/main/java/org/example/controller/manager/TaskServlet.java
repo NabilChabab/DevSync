@@ -59,18 +59,24 @@ public class TaskServlet extends HttpServlet {
         if ("delete".equalsIgnoreCase(method)) {
             delete(request, response);
         } else if (userId != null && !userId.isEmpty()) {
-            update(request, response);
+            updatedUserId(request, response);
         } else {
             save(request, response);
         }
     }
 
     public void save(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         LocalDate startDate = LocalDate.parse(request.getParameter("start_date"));
         LocalDate endDate = LocalDate.parse(request.getParameter("end_date"));
-        Long userId = Long.parseLong(request.getParameter("user_id"));
+
+        Long userId = null;
+        if (request.getParameter("user_id") != null && !request.getParameter("user_id").isEmpty()) {
+            userId = Long.parseLong(request.getParameter("user_id"));
+        }
         Long managerId = Long.parseLong(request.getParameter("manager_id"));
 
         Part filePart = request.getPart("file");
@@ -90,9 +96,9 @@ public class TaskServlet extends HttpServlet {
         task.setStatus(Status.PENDING);
         task.setStartDate(startDate);
         task.setEndDate(endDate);
-        task.setUser(userRepository.findById(userId));
+        task.setUser(userId != null ? userRepository.findById(userId) : null);
         task.setManager(userRepository.findById(managerId));
-        task.setFile(filePath); // filePath will be null if no file is uploaded
+        task.setFile(filePath);
 
         taskRepository.save(task);
 
@@ -108,7 +114,13 @@ public class TaskServlet extends HttpServlet {
         String description = request.getParameter("description");
         LocalDate startDate = LocalDate.parse(request.getParameter("start_date"));
         LocalDate endDate = LocalDate.parse(request.getParameter("end_date"));
-        Long userId = Long.parseLong(request.getParameter("user_id"));
+
+        Long userId = null;
+        String userIdStr = request.getParameter("userId");
+        if (userIdStr != null && !userIdStr.isEmpty()) {
+            userId = Long.parseLong(userIdStr);
+        }
+
         Long managerId = Long.parseLong(request.getParameter("manager_id"));
 
         Task task = taskRepository.findById(id);
@@ -116,13 +128,33 @@ public class TaskServlet extends HttpServlet {
         task.setDescription(description);
         task.setStartDate(startDate);
         task.setEndDate(endDate);
-        task.setUser(userRepository.findById(userId));
+        task.setUser(userId != null ? userRepository.findById(userId) : null);
         task.setManager(userRepository.findById(managerId));
 
         taskRepository.update(task);
 
         response.sendRedirect(request.getContextPath() + "/manager/tasks");
     }
+
+    public void updatedUserId(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long taskId = Long.parseLong(request.getParameter("task_id"));
+        String userIdParam = request.getParameter("userId");
+
+        Task task = taskRepository.findById(taskId);
+
+        if (userIdParam != null && !userIdParam.isEmpty()) {
+            Long userId = Long.parseLong(userIdParam);
+            User user = userRepository.findById(userId);
+            task.setUser(user);
+        } else {
+            task.setUser(null);
+        }
+
+        taskRepository.updateUserId(task.getUser() != null ? task.getUser().getId() : null, taskId);
+
+        response.sendRedirect(request.getContextPath() + "/manager/tasks");
+    }
+
 
     public void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(request.getParameter("id"));
