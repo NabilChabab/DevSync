@@ -6,12 +6,12 @@
 
 <%
     Calendar calendar = Calendar.getInstance();
-
-    calendar.add(Calendar.DAY_OF_YEAR, 1);
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    String tomorrow = sdf.format(calendar.getTime());
 
-    calendar = Calendar.getInstance();
+    // Default for no user selection (min is today)
+    String today = sdf.format(calendar.getTime());
+
+    // For user selection (min is three days from now)
     calendar.add(Calendar.DAY_OF_YEAR, 3);
     String threeDaysFromNow = sdf.format(calendar.getTime());
 %>
@@ -30,10 +30,16 @@
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <!-- CSS Files -->
     <link id="pagestyle" href="${pageContext.request.contextPath}/public/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
 <style>
+
+    .toast {
+        opacity: 1 !important;
+    }
 
     .cards {
         width: 100%;
@@ -115,15 +121,14 @@
     .file-upload-label .icon {
         margin-right: 8px; /* Space between icon and text */
     }
-
-    li:hover {
-        background-color: #5E72E4;
+    .text-primary-hover:hover {
+        background-color: #5e72e4;
     }
 </style>
-<body class="g-sidenav-show" style="background-color:#161718;">
-<div class="min-height-300 position-absolute w-100" style="background-color:rgb(112, 1, 1);"></div>
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
-       id="sidenav-main" style="background-color:#161718;">
+<body class="g-sidenav-show" style="background-color:white;">
+<div class="min-height-300 position-absolute w-100" style="background-color: #5E72E4"></div>
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 shadow-blur"
+       id="sidenav-main" style="background-color:white;z-index: 999">
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
            aria-hidden="true" id="iconSidenav"></i>
@@ -146,12 +151,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="">
+                <a class="nav-link active" href="" style="background-color: #5E72E4;">
                     <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
                         <i class="bx bx-task text-danger text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Tasks</span>
+                    <span class="nav-link-text text-white ms-1">Tasks</span>
                 </a>
             </li>
 
@@ -231,7 +236,7 @@
         <div class="row">
             <c:forEach var="task" items="${lastTasks}">
                 <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                    <div class="card" style="background-color:#161718;">
+                    <div class="card" style="background-color:white;">
                         <div class="card-body p-3">
                             <div class="row">
                                 <div class="col-8">
@@ -253,7 +258,12 @@
                                 <div class="col-4 text-end">
                                     <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
                                         <a href="#">
-                                            <img src="${pageContext.request.contextPath}/${task.user.profile ? task.user.profile : 'public/images/avatar.jfif'}" alt="user-avatar" class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                            <c:if test="${not empty task.user.profile}">
+                                                <img src="${pageContext.request.contextPath}/${task.user.profile}" alt="user-avatar" class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                            </c:if>
+                                            <c:if test="${empty task.user.profile}">
+                                                <img src="${pageContext.request.contextPath}/public/images/avatar.jfif" alt="user-avatar" class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                            </c:if>
                                         </a>
                                     </div>
                                 </div>
@@ -271,9 +281,9 @@
         <div class="row mt-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="card mb-4" style="background-color:#161718;">
+                    <div class="card mb-4" style="background-color:white;">
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center"
-                             style="background-color:#161718;">
+                             style="background-color:white;">
                             <h6>Users</h6>
                             <a href="" class="btn btn-primary" data-bs-toggle="modal"
                                data-bs-target="#addTask">New Task</a>
@@ -287,7 +297,7 @@
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             ID</th>
                                         <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-start text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Title</th>
                                         <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -312,7 +322,7 @@
                                     <c:forEach var="task" items="${tasks}">
                                         <tr>
                                             <td>${task.id}</td>
-                                            <td class="align-middle text-center">${task.title}</td>
+                                            <td class="align-middle text-start">${task.title}</td>
                                             <td class="align-middle text-center">
                                                 <span class="badge badge-sm bg-gradient-warning">
                                                     ${task.status}
@@ -325,50 +335,55 @@
                                                 <span class="text-secondary text-xs font-weight-bold">${task.endDate}</span>
                                             </td>
                                             <form method="POST" action="${pageContext.request.contextPath}/manager/tasks">
-                                                <td class="d-flex align-items-center">
-                                                    <c:if test="${not empty task.user.profile}">
-                                                        <img src="${pageContext.request.contextPath}/${task.user.profile}"
-                                                             class="avatar avatar-sm me-2 border-radius-2xl profilee"
-                                                             alt="user"
-                                                             style="object-fit: cover; width: 40px; height: 40px;">
-                                                    </c:if>
-                                                    <c:if test="${empty task.user.profile}">
-                                                        <img src="${pageContext.request.contextPath}/public/images/avatar.jfif"
-                                                             class="avatar avatar-sm me-2 border-radius-2xl profilee"
-                                                             alt="user"
-                                                             style="object-fit: cover; width: 40px; height: 40px;">
-                                                    </c:if>
+                                                <td class="d-flex align-items-center justify-content-between">
+                                                    <div class="d-flex align-items-center" style="width: 10px">
+                                                        <c:if test="${not empty task.user.profile}">
+                                                            <img src="${pageContext.request.contextPath}/${task.user.profile}"
+                                                                 class="avatar avatar-sm me-2 border-radius-2xl profilee"
+                                                                 alt="user"
+                                                                 style="object-fit: cover; width: 40px; height: 40px;">
+                                                        </c:if>
+                                                        <c:if test="${empty task.user.profile}">
+                                                            <img src="${pageContext.request.contextPath}/public/images/avatar.jfif"
+                                                                 class="avatar avatar-sm me-2 border-radius-2xl profilee"
+                                                                 alt="user"
+                                                                 style="object-fit: cover; width: 40px; height: 40px;">
+                                                        </c:if>
 
-                                                    <div class="d-flex flex-column align-items-start ms-2">
-            <span class="text-secondary text-xs font-weight-bold" id="usernamee">
-                    ${not empty task.user.username ? task.user.username : 'unassigned'}
-            </span>
-                                                        <span class="text-secondary text-xs">------</span>
+                                                        <div class="d-flex flex-column align-items-start ms-2">
+                                                        <span class="text-secondary text-xs font-weight-bold" id="usernamee">
+                                                                ${not empty task.user.username ? task.user.username : 'unassigned'}
+                                                        </span>
+                                                            <span class="text-secondary text-xs">------</span>
+                                                        </div>
                                                     </div>
 
-                                                    <div class="dropdown ms-3">
-                                                        <button class="btn btn-primary bg-transparent dropdown-toggle p-0" type="button" data-bs-toggle="dropdown"></button>
-                                                        <ul class="dropdown-menu custom-menu">
-                                                            <c:forEach var="user" items="${users}">
-                                                                <li>
-                                                                    <a class="dropdown-item custom-item" href="#"
-                                                                       data-profilee="${pageContext.request.contextPath}/${user.profile}"
-                                                                       data-usernamee="${user.username}"
-                                                                       data-userIdd="${user.id}"
-                                                                       onclick="updateProfileImageTable(event, this);">
-                                                                        <img src="${pageContext.request.contextPath}/${user.profile}" alt="${user.username}" class="profile-img">
-                                                                        <span>${user.username}</span>
-                                                                    </a>
-                                                                </li>
-                                                            </c:forEach>
-                                                        </ul>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="dropdown ms-3">
+                                                            <button class="btn btn-primary bg-transparent dropdown-toggle p-0 shadow-none text-secondary" type="button" data-bs-toggle="dropdown"></button>
+                                                            <ul class="dropdown-menu custom-menu">
+                                                                <c:forEach var="user" items="${users}">
+                                                                    <li class="text-primary-hover">
+                                                                        <a class="dropdown-item custom-item" href="#"
+                                                                           data-profilee="${pageContext.request.contextPath}/${user.profile}"
+                                                                           data-usernamee="${user.username}"
+                                                                           data-userIdd="${user.id}"
+                                                                           onclick="updateProfileImageTable(event, this);">
+                                                                            <img src="${pageContext.request.contextPath}/${user.profile}" alt="${user.username}" class="profile-img">
+                                                                            <span>${user.username}</span>
+                                                                        </a>
+                                                                    </li>
+                                                                </c:forEach>
+                                                            </ul>
+                                                        </div>
+                                                        <input type="hidden" id="user_id1" name="userId">
+                                                        <input type="hidden" name="task_id" value="${task.id}">
+                                                        <button type="submit" class="border-radius-2xl bg-success ms-3" style="border: none; display: none;width: 20px;height: 20px">
+                                                            <i class="bx bx-check text-white"></i>
+                                                        </button>
                                                     </div>
 
-                                                    <input type="hidden" id="user_id1" name="userId">
-                                                    <input type="hidden" name="task_id" value="${task.id}">
-                                                    <button type="submit" class="border-radius-2xl bg-success ms-5" style="border: none; display: none">
-                                                        <i class="bx bx-check text-white"></i>
-                                                    </button>
+
                                                 </td>
                                             </form>
 
@@ -376,10 +391,23 @@
 
 
                                             <td class="align-middle text-center">
+                                                <button class="badge badge-sm bg-gradient-primary text-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                                                        data-show-tasktitle="${task.title}"
+                                                        data-show-task-username="${task.user.username}"
+                                                        data-show-description="${task.description}"
+                                                        data-show-start="${task.startDate}"
+                                                        data-show-end="${task.endDate}"
+                                                        data-show-userprofile="${pageContext.request.contextPath}/${task.user.profile}"
+                                                        data-show-manager="${task.manager.username}"
+                                                        data-show-file="${task.file}"
+                                                        data-show-createdAt="${task.createdAt}"
+                                                        style="border: none">
+                                                    <i class="bx bxs-show"></i>
+                                                </button>
                                                 <form action="${pageContext.request.contextPath}/manager/tasks" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                     <input type="hidden" name="id" value="${task.id}">
                                                     <input type="hidden" name="_method" value="delete">
-                                                    <button class="badge badge-sm bg-gradient-danger text-center" style="border: none">Delete</button>
+                                                    <button class="badge badge-sm bg-gradient-danger text-center" style="border: none"><i class="bx bxs-trash"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -394,19 +422,52 @@
 
             </div>
         </div>
-        <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 100001;width: 100%">
-            <div class="modal-dialog" style="background-color:#161718;width: 50% !important;">
-                <div class="modal-content" style="background-color:#161718;">
-                    <div class="modal-header border-bottom-0" style="background-color:#161718;">
-                        <h5 class="modal-title text-white" id="editProfileModalLabel">Add New Task</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 800px !important;">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasRightLabel">Task Details</h5>
+                <p class="text-secondary font-weight-normal" id="show-task-createdAt"></p>
+            </div>
+            <div class="offcanvas-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="dropdown mt-3">
+                            <button class="btn btn-primary bg-transparent p-0 text-secondary shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="show-task-username">
+                            </button>
+                        </div>
+                        <img src="${pageContext.request.contextPath}/public/images/avatar.jfif" id="show-task-userprofile" class="profile-img" style="width: 50px; height: 50px; object-fit: cover;">
                     </div>
-                    <div class="modal-body" style="background-color:#161718;">
+                    <input type="text" id="show-task-title" class="form-control bg-transparent mb-3 mt-3 text-dark font-weight-bold shadow-none" placeholder="Title" readonly style="border: none">
+                    <textarea id="show-task-description" class="form-control bg-dark mb-3" readonly></textarea>
+                    <div class="row mt-3 mb-5">
+                        <div class="col">
+                            <label>Start Date</label>
+                            <span id="show-task-start" class="form-control bg-transparent text-secondary border-0"></span>
+                        </div>
+                        <div class="col">
+                            <label>End Date</label>
+                            <span id="show-task-end" class="form-control bg-transparent text-secondary border-0"></span>
+                        </div>
+                    </div>
+                    <div class="file-upload-container mt-3 d-flex align-items-center justify-content-start">
+                        <i class="bx bx-file text-primary opacity-10 me-3" style="font-size: 30px"></i>
+                        <span id="show-task-file" class="text-secondary">No file joined in this Task</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 99999;width: 100%">
+            <div class="modal-dialog border-radius-xl" style="background-color:white;">
+                <div class="modal-content border-radius-xl" style="background-color:white;">
+                    <div class="modal-header border-bottom-0" style="background-color:white;">
+                        <h5 class="modal-title text-dark" id="editProfileModalLabel">Add New Task</h5>
+                        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="background-color:white;">
                         <form action="${pageContext.request.contextPath}/manager/tasks" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="dropdown mt-3">
-                                        <button class="btn btn-primary bg-transparent dropdown-toggle p-0" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-primary bg-transparent dropdown-toggle p-0 text-secondary shadow-none" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                             Assign to person
                                         </button>
                                         <ul class="dropdown-menu custom-menu" aria-labelledby="userDropdown">
@@ -425,21 +486,16 @@
                                     <input type="hidden" id="userId" name="user_id">
                                     <img id="selectedProfileImg" src="${pageContext.request.contextPath}/public/images/avatar.jfif" class="profile-img" style="width: 40px; height: 40px; object-fit: cover;">
                                 </div>
-                                <input type="text" id="title" name="title" class="form-control bg-transparent mb-3 mt-3 text-white font-weight-bold shadow-none" placeholder="Title" style="border: none">
+                                <input type="text" id="title" name="title" class="form-control bg-transparent mb-3 mt-3 text-dark font-weight-bold shadow-none" placeholder="Title" style="border: none">
                                 <textarea type="text" id="description" name="description" class="form-control bg-dark mb-3"></textarea>
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label>Start Date</label>
-                                        <input type="date" name="start_date" class="form-control bg-transparent text-secondary border-0"
-                                               placeholder="Start Date"
-                                               min="<%= threeDaysFromNow %>">
+                                        <input type="date" name="start_date" id="startDate" class="form-control bg-transparent text-secondary border-0" placeholder="Start Date" min="<%= today %>">
                                     </div>
                                     <div class="col">
                                         <label>End Date</label>
-                                        <input type="date" name="end_date" class="form-control bg-transparent text-secondary border-0"
-                                               placeholder="End Date"
-                                               min="<%= tomorrow %>"
-                                               id="endDate">
+                                        <input type="date" name="end_date" id="endDate" class="form-control bg-transparent text-secondary border-0" placeholder="End Date" min="<%= threeDaysFromNow %>">
                                     </div>
                                 </div>
 
@@ -511,6 +567,9 @@
             </div>
         </footer>
     </div>
+
+    <!-- Script to Show Toast -->
+
 </main>
 
 
@@ -523,6 +582,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
 <script src="https://cdn.tiny.cloud/1/f9ggt3dqixvgwwjjoxp3xio6hgf0r72qnuvll71z6g0sckld/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
@@ -533,21 +594,75 @@
     });
 </script>
 
+<script>
+    window.onload = function() {
+        const successMessage = '<%= session.getAttribute("success") != null ? session.getAttribute("success") : "" %>';
+        if (successMessage) {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "2000",  // Duration on screen
+                "extendedTimeOut": "1000",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                "showDuration": "300",
+                "hideDuration": "1000"
+            };
+
+            toastr.success(successMessage);
+            <% session.removeAttribute("success"); %>
+        }
+        else {
+            const errorMessage = '<%= session.getAttribute("error") != null ? session.getAttribute("error") : "" %>';
+            if (errorMessage) {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "timeOut": "2000",  // Duration on screen
+                    "extendedTimeOut": "1000",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",
+                    "showDuration": "300",
+                    "hideDuration": "1000"
+                };
+
+                toastr.error(errorMessage);
+                <% session.removeAttribute("error"); %>
+            }
+        }
+    };
+</script>
+
 
 <script>
     $(document).ready(function() {
-        $('#updateUser').on('show.bs.modal', function(event) {
+        $('#offcanvasRight').on('show.bs.offcanvas', function(event) {
             var button = $(event.relatedTarget);
-            var userId = button.data('user_id');
-            var userName = button.data('user_name');
-            var userEmail = button.data('user_email');
+            var taskUsername = button.data('show-task-username');
+            var taskTitle = button.data('show-tasktitle');
+            var description = button.data('show-description');
+            var start = button.data('show-start');
+            var end = button.data('show-end');
+            var userprofile = button.data('show-userprofile');
+            var file = button.data('show-file');
+            var createdAt = button.data('show-createdAt');
+
             var modal = $(this);
-            modal.find('#user_id').val(userId);
-            modal.find('#username2').val(userName);
-            modal.find('#useremail').val(userEmail);
+
+            modal.find('#show-task-username').text('Assigned To ' + taskUsername);
+            modal.find('#show-task-title').val(taskTitle);
+            tinymce.get('show-task-description').setContent(description);
+            modal.find('#show-task-start').text(start);
+            modal.find('#show-task-end').text(end);
+            modal.find('#show-task-userprofile').attr('src', userprofile);
+            modal.find('#show-task-file').text(file ? file : 'No file joined in this Task');
+            modal.find('#show-task-createdAt').text(createdAt);
         });
     });
 </script>
+
 
 
 <script>
@@ -563,6 +678,11 @@
 
 <script>
 
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const threeDaysFromNow = '<%= threeDaysFromNow %>';
+    const today = '<%= today %>';
+
     function updateProfileImage(event) {
         event.preventDefault();
         const profileImgSrc = event.currentTarget.getAttribute('data-profile');
@@ -571,10 +691,23 @@
         const dropdownButton = document.getElementById('userDropdown');
         const userId = event.currentTarget.getAttribute('data-userId');
         const userIdInput = document.getElementById('userId');
+
         selectedProfileImg.src = profileImgSrc;
         dropdownButton.innerText = `Assigned to ` + username;
         userIdInput.value = userId;
+
+        // Set the min date to three days from today if a user is selected
+        startDateInput.min = today;
+        endDateInput.min = threeDaysFromNow;
     }
+
+    // Reset min dates to today if no user is selected
+    document.getElementById('userDropdown').addEventListener('click', function() {
+        if (!document.getElementById('userId').value) {
+            startDateInput.min = today;
+            endDateInput.min = today;
+        }
+    });
     function updateProfileImageTable(event, dropdownItem) {
         event.preventDefault();
 
@@ -594,7 +727,9 @@
         userIdInput.value = userId;
 
         const submitBtn = taskCell.querySelector('button[type="submit"]');
-        submitBtn.style.display = userId ? 'block' : 'none';
+        submitBtn.style.display = userId ? 'flex' : 'none';
+        submitBtn.style.alignItems = 'center';
+        submitBtn.style.justifyContent = 'center';
     }
 
 </script>

@@ -38,7 +38,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public List<Task> findAll() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            return entityManager.createQuery("SELECT t FROM Task t", Task.class).getResultList();
+            return entityManager.createQuery("SELECT t FROM Task t ORDER BY t.id ASC", Task.class).getResultList();
         } finally {
             entityManager.close();
         }
@@ -128,6 +128,56 @@ public class TaskRepositoryImpl implements TaskRepository {
                 transaction.rollback();
             }
             throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<Task> findByStatus(String status) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            return entityManager.createQuery("SELECT t FROM Task t WHERE t.status = :status", Task.class)
+                    .setParameter("status", status)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<Task> findAllByUserId(Long userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            return entityManager.createQuery("SELECT t FROM Task t WHERE t.user.id = :userId AND t.manager IS NULL", Task.class)
+                    .setParameter("userId", userId)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<Task> findLastFoorByUserId(Long userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            return entityManager.createQuery("SELECT t FROM Task t WHERE t.user.id = :userId ORDER BY t.id DESC", Task.class)
+                    .setParameter("userId", userId)
+                    .setMaxResults(4)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<Task> findAllAssignedTasks(Long userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            return entityManager.createQuery(
+                            "SELECT t FROM Task t WHERE t.user.id = :userId AND t.manager IS NOT NULL", Task.class)
+                    .setParameter("userId", userId)
+                    .getResultList();
         } finally {
             entityManager.close();
         }

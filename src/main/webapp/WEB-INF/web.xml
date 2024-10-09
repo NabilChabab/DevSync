@@ -9,7 +9,7 @@
 
   <servlet>
     <servlet-name>UserServlet</servlet-name>
-    <servlet-class>org.example.controller.user.UserServlet</servlet-class>
+    <servlet-class>org.example.controller.user.UserController</servlet-class>
 
     <multipart-config>
       <location></location>

@@ -54,10 +54,10 @@
         display: none;
     }
 </style>
-<body class="g-sidenav-show" style="background-color:#161718;">
-<div class="min-height-300 position-absolute w-100" style="background-color:rgb(112, 1, 1);"></div>
+<body class="g-sidenav-show" style="background-color:white;">
+<div class="min-height-300 position-absolute w-100" style="background-color:#5E72E4;"></div>
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
-       id="sidenav-main" style="background-color:#161718;">
+       id="sidenav-main" style="background-color:white;z-index: 999">
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
            aria-hidden="true" id="iconSidenav"></i>
@@ -71,12 +71,12 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link active" href="">
+                <a class="nav-link active" href="" style="background-color: #5E72E4;">
                     <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 mb-2 d-flex align-items-center justify-content-center">
-                        <i class="bx bx-home text-primary text-sm opacity-10"></i>
+                        <i class="bx bx-home text-white text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Dashboard</span>
+                    <span class="nav-link-text text-white ms-1">Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -159,7 +159,7 @@
         <div class="row">
             <c:forEach var="user" items="${last_users}">
             <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card" style="background-color:#161718;">
+                <div class="card" style="background-color:white;">
                     <div class="card-body p-3">
                         <div class="row">
                             <div class="col-8">
@@ -198,9 +198,9 @@
         <div class="row mt-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="card mb-4" style="background-color:#161718;">
+                    <div class="card mb-4" style="background-color:white;">
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center"
-                             style="background-color:#161718;">
+                             style="background-color:white;">
                             <h6>Users</h6>
                             <a href="" class="btn btn-primary" data-bs-toggle="modal"
                                data-bs-target="#addUser">Create One</a>
@@ -280,19 +280,19 @@
             </div>
         </div>
         <div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 100001">
-            <div class="modal-dialog" style="background-color:#161718;">
-                <div class="modal-content" style="background-color:#161718;">
-                    <div class="modal-header" style="background-color:#161718;">
-                        <h5 class="modal-title text-white" id="editProfileModalLabel">Add User</h5>
+            <div class="modal-dialog" >
+                <div class="modal-content" >
+                    <div class="modal-header" >
+                        <h5 class="modal-title text-dark" id="editProfileModalLabel">Add User</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" style="background-color:#161718;">
+                    <div class="modal-body">
                         <form action="${pageContext.request.contextPath}/manager/dashboard" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <div class="cards">
                                     <img src="${pageContext.request.contextPath}/public/images/avatar.jfif" id="image" style="width: 100px ; height: 100px ; object-fit: cover">
                                     <label for="profile" class="text-sm">Choose Image</label>
-                                    <input type="file" id="profile" name="profile"  class="form-control bg-transparent mt-3" placeholder="Put you Piecture here">
+                                    <input type="file" id="profile" name="profile"  class="form-control bg-transparent mt-3" placeholder="Put you Picture here">
 
                                 </div>
                                 <input type="text" id="username" name="username" class="form-control bg-transparent" placeholder="UserName">
@@ -310,18 +310,18 @@
             </div>
         </div>
         <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 100001">
-            <div class="modal-dialog" style="background-color:#161718;">
-                <div class="modal-content" style="background-color:#161718;">
-                    <div class="modal-header" style="background-color:#161718;">
-                        <h5 class="modal-title text-white" >Update User</h5>
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" >Update User</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" style="background-color:#161718;">
+                    <div class="modal-body">
                         <form action="../manager/dashboard" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <input type="hidden" name="user_id" id="user_id">
-                                <input type="text" id="username2" name="username" class="form-control bg-transparent text-white" placeholder="Name">
-                                <input type="text" id="useremail"  name="email" class="form-control bg-transparent mt-3 text-white" placeholder="exemple@gmail.com">
+                                <input type="text" id="username2" name="username" class="form-control bg-transparent text-dark" placeholder="Name">
+                                <input type="text" id="useremail"  name="email" class="form-control bg-transparent mt-3 text-dark" placeholder="exemple@gmail.com">
                             </div>
                             <button type="submit" class="btn btn-primary">Update</button>
                         </form>
