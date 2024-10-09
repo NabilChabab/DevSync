@@ -20,4 +20,14 @@ public interface TaskRepository {
     List<Task> findByUserId(Long userId);
 
     void updateUserId(Long userId, Long taskId);
+
+    List<Task> findByStatus(String status);
+
+    List<Task> findAllByUserId(Long userId);
+
+    List<Task> findLastFoorByUserId(Long userId);
+
+    List<Task> findAllAssignedTasks(Long userId);
+
+
 }
