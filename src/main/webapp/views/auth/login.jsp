@@ -20,6 +20,9 @@
 </html>
 -->
 
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,249 +31,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-
-    <link href="#" rel="icon">
-    <link href="#" rel="apple-touch-icon">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap" rel="stylesheet">
     <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Cardo:ital,wght@0,400;0,700;1,400&display=swap"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="vue-toast-notification/dist/theme-default.css"
+    />
 
-    <!-- Vendor CSS Files -->
-    <link href="${pageContext.request.contextPath}/public/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/assets/vendor/aos/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/public/assets/css/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/public/css/style.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/public/user/css/styles.css">
-    <script src="https://js.stripe.com/v3/"></script>
+    <link href="https://rsms.me/inter/inter-ui.css" rel="stylesheet" />
+
+    <!-- Nucleo Icons -->
+    <link href="${pageContext.request.contextPath}/public/assetsAuth/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/public/assetsAuth/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script
+            src="https://kit.fontawesome.com/42d5adcbca.js"
+            crossorigin="anonymous"
+    ></script>
+    <link href="${pageContext.request.contextPath}/public/assetsAuth/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link
+            id="pagestyle"
+            href="${pageContext.request.contextPath}/public/assetsAuth/css/argon-dashboard.css?v=2.0.4"
+            rel="stylesheet"
+    />
+    <link
+            href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+            rel="stylesheet"
+    />
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 <style>
-    .bg-glass {
-        background-color: hsla(0, 94%, 26%, 0.267) !important;
-        backdrop-filter: saturate(200%) blur(25px);
-    }
 
-    .bg-glass2 {
-        background-color: hsla(0, 0%, 0%, 0.555) !important;
-        backdrop-filter: saturate(200%) blur(25px);
-    }
-
-    .custom-popup-class {
-        background-color: rgb(24, 24, 24);
-    }
-
-
-
-    .error input {
-        border: 3px solid red;
-    }
-
-    .success input {
-        border: 3px solid green;
-    }
-
-    form span.error-msg {
-        color: red;
-        width: 100%;
-        display: flex;
-        margin-left: 30%;
-        margin-bottom: 20px;
-    }
-
-    form {
-        padding: 20px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    form a {
-        margin-left: 25%;
-        text-decoration: none;
-    }
-
-    body {
-        height: 100vh;
-        width: 100%;
-        background-position: center;
-        background-size: cover;
-        object-fit: cover;
-
-
-    }
-
-    .cards {
-        width: 100%;
-        border: none;
-        background-color: transparent;
-        border: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column
-    }
-
-    .cards img {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .cards label {
-        margin-top: 30px;
-        text-align: center;
-        height: 40px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 20px;
-        margin-bottom: 10px;
-
-    }
-
-    .cards input {
-        display: none;
-    }
-
-    .table-responsive {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .form-outline input {
-        background-color: rgb(37, 37, 37);
-        border: none;
-        width: 100%;
-        padding: 15px;
-        margin-top: 30px;
-        color: rgb(187, 187, 187);
-
-    }
-
-    .form-outline select {
-        background-color: rgb(37, 37, 37);
-        border: none;
-        width: 100%;
-        padding: 15px;
-        margin-top: 30px;
-        color: rgb(187, 187, 187);
-
-    }
-
-    .pagination {
-        display: flex;
-        justify-content: center;
-        list-style: none;
-        padding: 0;
-    }
-
-    .pagination li {
-        margin: 0 5px;
-    }
-
-    .pagination li a {
-        display: inline-block;
-        background-color: transparent;
-        color: brown;
-        border: none;
-        text-decoration: none;
-    }
-
-    .pagination li .active a {
-        background-color: brown;
-        color: #6d0000;
-    }
 </style>
 
-<body>
+<body class="bg-white">
 
 
 <main id="main">
 
-    <div class="container" style="margin-top: 10%">
-        <div class="row gx-lg-5 align-items-center">
-            <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-                <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
-                    Welcome To <span style="font-family: 'Protest Riot', sans-serif;color:brown">D E V S Y N C</span> <br />
-                    <span style="color: white">All on One Platform</span>
-                </h1>
-                <p class="mb-4 opacity-70" style="color: white">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Temporibus, expedita iusto veniam atque, magni tempora mollitia
-                    dolorum consequatur nulla, neque debitis eos reprehenderit quasi
-                    ab ipsum nisi dolorem modi. Quos?
-                </p>
+
+    <div class="container position-sticky z-index-sticky top-0">
+        <div class="row">
+            <div class="col-12">
+                <nav
+                        class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4"
+                >
+                    <div class="container-fluid">
+                        <a
+                                class="navbar-brand font-weight-bolder ms-lg-0 ms-3"
+                        >
+                            D E V S Y N C
+                        </a>
+                        <button
+                                class="navbar-toggler shadow-none ms-2"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#navigation"
+                                aria-controls="navigation"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation"
+                        >
+        <span class="navbar-toggler-icon mt-2">
+          <span class="navbar-toggler-bar bar1"></span>
+          <span class="navbar-toggler-bar bar2"></span>
+          <span class="navbar-toggler-bar bar3"></span>
+        </span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navigation" v-if="user.role">
+                            <ul class="navbar-nav mx-auto">
+
+                                <li class="nav-item">
+                                    <a href="#about"
+                                       class="nav-link me-2"
+                                    >
+                                        About us
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a
+                                                 class="nav-link me-2 cursor-pointer"
+
+                                    >
+                                        Contact us
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="collapse navbar-collapse">
+                            <ul class="navbar-nav mx-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link me-2">
+                                        <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
+                                        Sign Up
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link me-2">
+                                        <i class="fas fa-key opacity-6 text-dark me-1"></i>
+                                        Sign In
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav d-lg-block d-none">
+                                <li class="nav-item">
+                                    <a
+                                            class="btn btn-sm mb-0 me-1 btn-primary"
+                                    >Subscribe</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
             </div>
+        </div>
+    </div>
+    <main class="main-content mt-0">
+        <section>
+            <div class="page-header min-vh-100">
+                <div class="container">
+                    <div class="row">
+                        <div
+                                class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto"
+                        >
+                            <div class="card card-plain">
+                                <div class="card-header pb-0 text-start">
+                                    <h4 class="font-weight-bolder text-dark">Sign In</h4>
+                                    <p class="mb-0 text-secondary">Enter your email and password to sign in</p>
+                                </div>
+                                <div class="card-body">
+                                    <form action="login" method="POST" id="form">
+                                        <div class="mb-3 form-outline">
+                                            <input
+                                                    type="email"
+                                                    name="email"
+                                                    class="form-control form-control-lg bg-secondary border-dark text-white"
+                                                    placeholder="Email"
+                                            />
+                                            <c:if test="${not empty emailError}">
+                                                <p class="form-error text-danger mt-2">${emailError}</p>
+                                            </c:if>
+                                        </div>
+                                        <div class="mb-3">
+                                            <input
+                                                    type="password"
+                                                    name="password"
+                                                    class="form-control form-control-lg bg-secondary border-dark text-white"
+                                            />
+                                            <c:if test="${not empty passwordError}">
+                                                <p class="form-error text-danger mt-2">${passwordError}</p>
+                                            </c:if>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="rememberMe" />
+                                                <label class="form-check-label text-secondary" for="rememberMe">Remember me</label>
+                                            </div>
+                                            <a
+                                                    class="btn btn-link text-white mt-3"
+                                            >Forgot Password?</a
+                                            >
+                                        </div>
+                                        <div class="text-center" style="display: none">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button
+                                                    type="submit"
+                                                    name="submit"
+                                                    class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0"
+                                            >
+                                                Sign in
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                    <p class="mb-4 text-sm mx-auto">
+                                        Don't have an account?
+                                        <a
+                                                class="text-primary font-weight-bold"
+                                        >Sign up</a
+                                        >
+                                    </p>
+                                </div>
 
-            <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-                <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-                <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
-
-                <div class="card1 bg-glass">
-                    <div class="card-body px-4 py-5 px-md-5">
-
-                        <form action="login" method="POST" id="form">
-                            <div class="form-outline mb-4">
-                                <input type="email" id="email" class="form-control p-2 bg-light text-dark" placeholder="Email" name="email" />
-                                <c:if test="${not empty emailError}">
-                                    <p class="form-error text-danger mt-2">${emailError}</p>
-                                </c:if>
                             </div>
+                        </div>
+                        <div
+                                class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column"
+                        >
+                            <div
+                                    class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
+                            >
+                                <span class="mask bg-gradient-primary opacity-6"></span>
 
-                            <div class="form-outline mb-4">
-                                <input type="password" id="password" class="form-control p-2 bg-light text-dark" placeholder="Password" name="password" />
-                                <c:if test="${not empty passwordError}">
-                                    <p class="form-error text-danger mt-2">${passwordError}</p>
-                                </c:if>
+                                <h4
+                                        class="mt-5 text-white font-weight-bolder position-relative"
+                                >
+                                    "Attention is the new currency"
+                                </h4>
+                                <p class="text-white position-relative">
+                                    The more effortless the writing looks, the more effort the
+                                    writer actually put into the process.
+                                </p>
                             </div>
-                            <a class="btn text-light text-center mb-3" href="" style="text-align:end;width:100%">Forgot Your Password?
-                            </a>
-
-                            <c:if test="${not empty loginError}">
-                                <p class="form-error text-danger">${loginError}</p>
-                            </c:if>
-
-                            <button type="submit" class="btn btn-dark btn-block mb-4 col-12 p-2">Login</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-
-
-</main>
-<footer id="footer" class="footer">
-    <div class="container">
-        <div class="copyright">
-            &copy; Copyright <strong><span>PhotoFolio</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/photofolio-bootstrap-photography-website-template/ -->
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-    </div>
-</footer>
-
-<a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a>
-
+        </section>
+    </main>
 
 
 
@@ -293,5 +271,4 @@
 
 
 </body>
-
 </html>

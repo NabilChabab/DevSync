@@ -1,5 +1,4 @@
-package org.example.controller.manager;
-
+package org.example.controller.user;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -11,10 +10,9 @@ import jakarta.servlet.http.Part;
 import org.example.models.Task;
 import org.example.models.User;
 import org.example.models.enums.Status;
-import org.example.models.enums.UserRole;
-import org.example.repository.interfaces.TaskRepository;
 import org.example.repository.TaskRepositoryImpl;
 import org.example.repository.UserRepositoryImpl;
+import org.example.repository.interfaces.TaskRepository;
 import org.example.repository.interfaces.UserRepository;
 
 import java.io.IOException;
@@ -22,16 +20,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-@WebServlet(name = "TaskServlet", value = "/manager/tasks")
+@WebServlet(name = "UserController", value = "/user/dashboard")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 10,
         maxRequestSize = 1024 * 1024 * 100
 )
-public class TaskServlet extends HttpServlet {
+public class UserController extends HttpServlet {
 
 
     private TaskRepository taskRepository = new TaskRepositoryImpl();
@@ -40,44 +37,40 @@ public class TaskServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        List<User> users = userRepository.findByRole(UserRole.USER);
-        List<Task> tasks = taskRepository.findAll();
-        List<Task> lastTasks = taskRepository.findLastFoor();
-        request.setAttribute("users", users);
+        User user = (User) request.getSession().getAttribute("user");
+        Long userId = user.getId();
+        List<Task> tasks = taskRepository.findAllByUserId(userId);
+        List<Task> lastTasks = taskRepository.findLastFoorByUserId(userId);
         request.setAttribute("tasks", tasks);
         request.setAttribute("lastTasks", lastTasks);
-        request.getRequestDispatcher("/views/manager/tasks.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/user/dashboard.jsp").forward(request, response);
     }
 
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String method = request.getParameter("_method");
-        String userId = request.getParameter("userId");
 
-        if ("delete".equalsIgnoreCase(method)) {
-            delete(request, response);
-        } else if (userId != null && !userId.isEmpty()) {
-            updatedUserId(request, response);
-        } else {
             save(request, response);
-        }
     }
 
     public void save(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         LocalDate startDate = LocalDate.parse(request.getParameter("start_date"));
         LocalDate endDate = LocalDate.parse(request.getParameter("end_date"));
 
-        Long userId = null;
+        // Retrieve user_id from session and request parameters
+        Long userId = (Long) request.getSession().getAttribute("user_id");
         if (request.getParameter("user_id") != null && !request.getParameter("user_id").isEmpty()) {
             userId = Long.parseLong(request.getParameter("user_id"));
         }
-        Long managerId = Long.parseLong(request.getParameter("manager_id"));
+
+        // Check if manager_id is provided in the request parameter
+        Long managerId = null;
+        String managerIdParam = request.getParameter("manager_id");
+        if (managerIdParam != null && !managerIdParam.isEmpty()) {
+            managerId = Long.parseLong(managerIdParam);
+        }
 
         Part filePart = request.getPart("file");
         String filePath = null;
@@ -97,16 +90,17 @@ public class TaskServlet extends HttpServlet {
         task.setStartDate(startDate);
         task.setEndDate(endDate);
         task.setUser(userId != null ? userRepository.findById(userId) : null);
-        task.setManager(userRepository.findById(managerId));
+
+        // Only set the manager if managerId is not null, otherwise leave it as null
+        task.setManager(managerId != null ? userRepository.findById(managerId) : null);
         task.setFile(filePath);
 
         taskRepository.save(task);
+        request.getSession().setAttribute("success", "Task created successfully!");
 
-        response.sendRedirect(request.getContextPath() + "/manager/tasks");
-
-
-
+        response.sendRedirect(request.getContextPath() + "/user/dashboard");
     }
+
 
     public void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(request.getParameter("task_id"));
@@ -132,6 +126,7 @@ public class TaskServlet extends HttpServlet {
         task.setManager(userRepository.findById(managerId));
 
         taskRepository.update(task);
+        request.getSession().setAttribute("success", "Task updated successfully!");
 
         response.sendRedirect(request.getContextPath() + "/manager/tasks");
     }
@@ -151,6 +146,7 @@ public class TaskServlet extends HttpServlet {
         }
 
         taskRepository.updateUserId(task.getUser() != null ? task.getUser().getId() : null, taskId);
+        request.getSession().setAttribute("success", "Assignment updated successfully!");
 
         response.sendRedirect(request.getContextPath() + "/manager/tasks");
     }
@@ -159,6 +155,9 @@ public class TaskServlet extends HttpServlet {
     public void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(request.getParameter("id"));
         taskRepository.delete(id);
+        request.getSession().setAttribute("success", "Task deleted successfully!");
         response.sendRedirect(request.getContextPath() + "/manager/tasks");
     }
+
+
 }
