@@ -21,6 +21,8 @@
 <head>
     <title>JSP - Hello World</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <!-- Nucleo Icons -->
@@ -32,11 +34,11 @@
     <link id="pagestyle" href="${pageContext.request.contextPath}/public/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
+
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
 <style>
-
     .toast {
         opacity: 1 !important;
     }
@@ -123,6 +125,19 @@
     }
     .text-primary-hover:hover {
         background-color: #5e72e4;
+    }
+
+    .success{
+        background-color: #D9FDEF !important;
+        color: #216E64 !important;
+    }
+    .warning{
+        background-color: #F1F2F4 !important;
+        color: #172B4D !important;
+    }
+    .primary {
+        background-color: #D6E4FF !important;
+        color: #2B44BD !important;
     }
 </style>
 <body class="g-sidenav-show" style="background-color:white;">
@@ -248,7 +263,7 @@
                                             ${task.endDate}
                                         </h5>
                                         <p class="mb-0">
-                                    <span class="text-sm font-weight-bolder ${task.status == 'COMPLETED' ? 'text-success' : 'text-warning'}">
+                                    <span class="text-sm font-weight-bolder ${task.status == 'DONE' ? 'text-success' : 'text-warning'}">
                                         ${task.status}
                                     </span>
 
@@ -285,8 +300,13 @@
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center"
                              style="background-color:white;">
                             <h6>Users</h6>
-                            <a href="" class="btn btn-primary" data-bs-toggle="modal"
-                               data-bs-target="#addTask">New Task</a>
+                            <div>
+                                <a href="" class="btn btn-primary" data-bs-toggle="modal"
+                                   data-bs-target="#addTag">Add Tag</a>
+                                <a href="" class="btn btn-primary" data-bs-toggle="modal"
+                                   data-bs-target="#addTask">New Task</a>
+
+                            </div>
 
                         </div>
                         <div class="card-body px-0 pt-0 pb-2" style="height: 100vh;">
@@ -324,9 +344,25 @@
                                             <td>${task.id}</td>
                                             <td class="align-middle text-start">${task.title}</td>
                                             <td class="align-middle text-center">
-                                                <span class="badge badge-sm bg-gradient-warning">
-                                                    ${task.status}
-                                                </span>
+                                                <form action="${pageContext.request.contextPath}/manager/tasks" method="POST">
+                                                    <input type="hidden" name="task_id" value="${task.id}" />
+                                                    <div class="dropdown">
+                                                        <button class="btn  btn-sm dropdown-toggle ${task.status == 'DONE' ? 'success' : task.status == 'IN_PROGRESS' ? 'primary' : 'warning'}" type="button" id="statusDropdown${task.id}" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 5px !important;">
+                                                                ${task.status}
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="statusDropdown${task.id}">
+                                                            <li class="text-center">
+                                                                <button class="dropdown-item text-dark font-weight-bold" type="submit" name="status" value="TODO">Todo</button>
+                                                            </li>
+                                                            <li class="text-center">
+                                                                <button class="dropdown-item text-primary font-weight-bold" type="submit" name="status" value="IN_PROGRESS">Inprogress</button>
+                                                            </li>
+                                                            <li class="text-center">
+                                                                <button class="dropdown-item text-success font-weight-bold" type="submit" name="status" value="DONE">Done</button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </form>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span class="text-secondary text-xs font-weight-bold">${task.startDate}</span>
@@ -378,7 +414,7 @@
                                                         </div>
                                                         <input type="hidden" id="user_id1" name="userId">
                                                         <input type="hidden" name="task_id" value="${task.id}">
-                                                        <button type="submit" class="border-radius-2xl bg-success ms-3" style="border: none; display: none;width: 20px;height: 20px">
+                                                        <button type="submit" class="badge badge-sm bg-gradient-success text-center ms-5 border-0" style="border: none; display: none;width: 20px;height: 20px">
                                                             <i class="bx bx-check text-white"></i>
                                                         </button>
                                                     </div>
@@ -455,7 +491,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 99999;width: 100%">
+        <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
             <div class="modal-dialog border-radius-xl" style="background-color:white;">
                 <div class="modal-content border-radius-xl" style="background-color:white;">
                     <div class="modal-header border-bottom-0" style="background-color:white;">
@@ -491,14 +527,23 @@
                                 <div class="row mt-3">
                                     <div class="col">
                                         <label>Start Date</label>
-                                        <input type="date" name="start_date" id="startDate" class="form-control bg-transparent text-secondary border-0" placeholder="Start Date" min="<%= today %>">
+                                        <input type="date" name="start_date" id="startDate" class="form-control bg-transparent text-secondary border-0" placeholder="Start Date" min="<%= threeDaysFromNow %>">
                                     </div>
                                     <div class="col">
                                         <label>End Date</label>
                                         <input type="date" name="end_date" id="endDate" class="form-control bg-transparent text-secondary border-0" placeholder="End Date" min="<%= threeDaysFromNow %>">
                                     </div>
                                 </div>
-
+                                <div class="form-group d-flex flex-column">
+                                    <label >Choose Your Tags</label>
+                                    <select name="tags[]" id="tag-multiple" multiple class="select2" style="border: none !important;">
+                                        <c:forEach var="tag" items="${tags}">
+                                            <option value="${tag.id}">
+                                                ${tag.name}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                                 <div class="file-upload-container mt-3 d-flex align-items-center justify-content-start">
                                     <input type="file" name="file" id="file" class="file-upload">
                                     <label for="file" class="file-upload-label border-0">
@@ -508,6 +553,25 @@
                                 </div>
 
 
+
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="float: right">Create</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addTag" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 99999;width: 100%">
+            <div class="modal-dialog border-radius-xl" style="background-color:white;">
+                <div class="modal-content border-radius-xl" style="background-color:white;">
+                    <div class="modal-header border-bottom-0" style="background-color:white;">
+                        <h5 class="modal-title text-dark">Add New Tag</h5>
+                        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="background-color:white;">
+                        <form action="${pageContext.request.contextPath}/manager/tags" method="post">
+                            <div class="mb-3">
+                                <input type="text" id="name" name="name" class="form-control bg-transparent mb-3 mt-3 text-dark font-weight-bold shadow-none" placeholder="Name">
                             </div>
                             <button type="submit" class="btn btn-primary" style="float: right">Create</button>
                         </form>
@@ -580,12 +644,13 @@
 <script src="${pageContext.request.contextPath}/public/assets/js/plugins/chartjs.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
 <script src="https://cdn.tiny.cloud/1/f9ggt3dqixvgwwjjoxp3xio6hgf0r72qnuvll71z6g0sckld/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     tinymce.init({
         selector: 'textarea',
@@ -673,6 +738,19 @@
     input.onchange = () => {
         image.src = URL.createObjectURL(input.files[0]);
     }
+</script>
+
+<script>
+    $(function () {
+        $('.selectOne').select2({
+            placeholder: "user",
+            allowClear: true
+        });
+        $('#tag-multiple').select2({
+            placeholder: "Tags",
+            allowClear: true
+        });
+    });
 
 </script>
 
@@ -697,7 +775,7 @@
         userIdInput.value = userId;
 
         // Set the min date to three days from today if a user is selected
-        startDateInput.min = today;
+        startDateInput.min = threeDaysFromNow;
         endDateInput.min = threeDaysFromNow;
     }
 

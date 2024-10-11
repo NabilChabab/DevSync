@@ -7,11 +7,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import org.example.models.Tag;
 import org.example.models.Task;
 import org.example.models.User;
 import org.example.models.enums.Status;
+import org.example.repository.TagRepositoryImpl;
 import org.example.repository.TaskRepositoryImpl;
 import org.example.repository.UserRepositoryImpl;
+import org.example.repository.interfaces.TagRepository;
 import org.example.repository.interfaces.TaskRepository;
 import org.example.repository.interfaces.UserRepository;
 
@@ -20,7 +23,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "UserController", value = "/user/dashboard")
 @MultipartConfig(
@@ -33,6 +40,7 @@ public class UserController extends HttpServlet {
 
     private TaskRepository taskRepository = new TaskRepositoryImpl();
     private UserRepository userRepository = new UserRepositoryImpl();
+    private TagRepository tagRepository = new TagRepositoryImpl();
 
 
     @Override
@@ -41,8 +49,10 @@ public class UserController extends HttpServlet {
         Long userId = user.getId();
         List<Task> tasks = taskRepository.findAllByUserId(userId);
         List<Task> lastTasks = taskRepository.findLastFoorByUserId(userId);
+        List<Tag> tags = tagRepository.findAll();
         request.setAttribute("tasks", tasks);
         request.setAttribute("lastTasks", lastTasks);
+        request.setAttribute("tags", tags);
         request.getRequestDispatcher("/views/user/dashboard.jsp").forward(request, response);
     }
 
@@ -86,15 +96,22 @@ public class UserController extends HttpServlet {
         Task task = new Task();
         task.setTitle(title);
         task.setDescription(description);
-        task.setStatus(Status.PENDING);
+        task.setStatus(Status.TODO);
         task.setStartDate(startDate);
         task.setEndDate(endDate);
         task.setUser(userId != null ? userRepository.findById(userId) : null);
 
-        // Only set the manager if managerId is not null, otherwise leave it as null
         task.setManager(managerId != null ? userRepository.findById(managerId) : null);
         task.setFile(filePath);
-
+        String[] tagIds = request.getParameterValues("tags[]");
+        if (tagIds != null) {
+            Set<Tag> tags = Arrays.stream(tagIds)
+                    .map(Long::parseLong)
+                    .map(tagRepository::findById)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            task.setTags(tags);
+        }
         taskRepository.save(task);
         request.getSession().setAttribute("success", "Task created successfully!");
 

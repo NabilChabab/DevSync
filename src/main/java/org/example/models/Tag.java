@@ -1,9 +1,14 @@
 package org.example.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tags")
+@Data
 public class Tag {
 
     @Id
@@ -12,4 +17,8 @@ public class Tag {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @ManyToMany(mappedBy = "tags")
+
+    private Set<Task> tasks = new HashSet<>();
 }
