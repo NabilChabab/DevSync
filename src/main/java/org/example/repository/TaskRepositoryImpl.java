@@ -6,6 +6,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import org.example.models.Task;
 import org.example.models.User;
+import org.example.models.enums.Status;
 import org.example.repository.interfaces.TaskRepository;
 
 import java.util.List;
@@ -121,6 +122,26 @@ public class TaskRepositoryImpl implements TaskRepository {
             transaction.begin();
             Task task = entityManager.find(Task.class, taskId);
             task.setUser(entityManager.find(User.class, userId));
+            entityManager.merge(task);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public void updateStatus(Status status, Long taskId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Task task = entityManager.find(Task.class, taskId);
+            task.setStatus(status);
             entityManager.merge(task);
             transaction.commit();
         } catch (Exception e) {

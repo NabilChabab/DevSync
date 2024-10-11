@@ -21,6 +21,8 @@
 <head>
     <title>JSP - Hello World</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <!-- Nucleo Icons -->
@@ -246,7 +248,7 @@
                                                 ${task.endDate}
                                         </h5>
                                         <p class="mb-0">
-                                    <span class="text-sm font-weight-bolder ${task.status == 'COMPLETED' ? 'text-success' : 'text-warning'}">
+                                    <span class="text-sm font-weight-bolder ${task.status == 'DONE' ? 'text-success' : 'text-secondary'}">
                                             ${task.status}
                                     </span>
 
@@ -324,9 +326,9 @@
                                             <td>${task.id}</td>
                                             <td class="align-middle text-start">${task.title}</td>
                                             <td class="align-middle text-center">
-                                                <span class="badge badge-sm bg-gradient-warning">
-                                                        ${task.status}
-                                                </span>
+                                                 <span class="badge badge-sm ${task.status == 'DONE' ? 'bg-gradient-success' : task.status == 'IN_PROGRESS' ? 'bg-gradient-primary' : 'bg-gradient-warning'}">
+                                                         ${task.status}
+                                                 </span>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span class="text-secondary text-xs font-weight-bold">${task.startDate}</span>
@@ -390,7 +392,7 @@
 
             </div>
         </div>
-        <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 99999;width: 100%">
+        <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
             <div class="modal-dialog border-radius-xl" style="background-color:white;">
                 <div class="modal-content border-radius-xl" style="background-color:white;">
                     <div class="modal-header border-bottom-0" style="background-color:white;">
@@ -421,9 +423,20 @@
                                         <label>End Date</label>
                                         <input type="date" name="end_date" class="form-control bg-transparent text-secondary border-0"
                                                placeholder="End Date"
-                                               min="<%= tomorrow %>"
+                                               min="<%= threeDaysFromNow %>"
                                                id="endDate">
                                     </div>
+                                </div>
+
+                                <div class="form-group d-flex flex-column">
+                                    <label >Choose Your Tags</label>
+                                    <select name="tags[]" id="tag-multiple" multiple class="select2" style="border: none !important;">
+                                        <c:forEach var="tag" items="${tags}">
+                                            <option value="${tag.id}">
+                                                    ${tag.name}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
 
                                 <div class="file-upload-container mt-3 d-flex align-items-center justify-content-start">
@@ -507,9 +520,11 @@
 <script src="${pageContext.request.contextPath}/public/assets/js/plugins/chartjs.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
 <script src="https://cdn.tiny.cloud/1/f9ggt3dqixvgwwjjoxp3xio6hgf0r72qnuvll71z6g0sckld/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
@@ -519,6 +534,20 @@
         plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
     });
+</script>
+
+<script>
+    $(function () {
+        $('.selectOne').select2({
+            placeholder: "user",
+            allowClear: true
+        });
+        $('#tag-multiple').select2({
+            placeholder: "Tags",
+            allowClear: true
+        });
+    });
+
 </script>
 
 <script>

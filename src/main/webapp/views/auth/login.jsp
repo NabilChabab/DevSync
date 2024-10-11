@@ -173,9 +173,7 @@
                                                     class="form-control form-control-lg bg-secondary border-dark text-white"
                                                     placeholder="Email"
                                             />
-                                            <c:if test="${not empty emailError}">
-                                                <p class="form-error text-danger mt-2">${emailError}</p>
-                                            </c:if>
+
                                         </div>
                                         <div class="mb-3">
                                             <input
@@ -183,9 +181,7 @@
                                                     name="password"
                                                     class="form-control form-control-lg bg-secondary border-dark text-white"
                                             />
-                                            <c:if test="${not empty passwordError}">
-                                                <p class="form-error text-danger mt-2">${passwordError}</p>
-                                            </c:if>
+
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div class="form-check form-switch">

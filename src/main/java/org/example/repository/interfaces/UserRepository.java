@@ -6,7 +6,7 @@ import org.example.models.enums.UserRole;
 import java.util.List;
 
 public interface UserRepository {
-    void save(User user);
+    User save(User user);
 
     List<User> findAll();
 
