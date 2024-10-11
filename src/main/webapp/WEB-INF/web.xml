@@ -8,7 +8,7 @@
 
 
   <servlet>
-    <servlet-name>UserServlet</servlet-name>
+    <servlet-name>UserController</servlet-name>
     <servlet-class>org.example.controller.user.UserController</servlet-class>
 
     <multipart-config>
@@ -20,7 +20,7 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>UserServlet</servlet-name>
+    <servlet-name>UserController</servlet-name>
     <url-pattern>/user/dashboard</url-pattern>
   </servlet-mapping>
 

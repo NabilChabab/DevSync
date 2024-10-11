@@ -1,6 +1,7 @@
 package org.example.repository.interfaces;
 
 import org.example.models.Task;
+import org.example.models.enums.Status;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public interface TaskRepository {
     List<Task> findByUserId(Long userId);
 
     void updateUserId(Long userId, Long taskId);
+
+    void updateStatus(Status status, Long taskId);
 
     List<Task> findByStatus(String status);
 

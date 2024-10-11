@@ -21,7 +21,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public void save(User user) {
+    public User save(User user) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -36,6 +36,8 @@ public class UserRepositoryImpl implements UserRepository {
         } finally {
             entityManager.close();
         }
+
+        return user;
     }
 
 
@@ -103,7 +105,7 @@ public class UserRepositoryImpl implements UserRepository {
         List<User> users = null;
         try {
             users = entityManager.createQuery("SELECT u FROM User u ORDER BY u.id DESC", User.class)
-                    .setMaxResults(4) // Fetch only the last 4 users
+                    .setMaxResults(4)
                     .getResultList();
         } finally {
             entityManager.close();
@@ -136,6 +138,5 @@ public class UserRepositoryImpl implements UserRepository {
             entityManager.close();
         }
     }
-
 
 }
