@@ -124,6 +124,18 @@
     .text-primary-hover:hover {
         background-color: #5e72e4;
     }
+    .success{
+        background-color: #D9FDEF !important;
+        color: #216E64 !important;
+    }
+    .warning{
+        background-color: #F1F2F4 !important;
+        color: #172B4D !important;
+    }
+    .primary {
+        background-color: #D6E4FF !important;
+        color: #2B44BD !important;
+    }
 </style>
 <body class="g-sidenav-show" style="background-color:white;">
 <div class="min-height-300 position-absolute w-100" style="background-color: #5E72E4"></div>
@@ -326,7 +338,7 @@
                                             <td>${task.id}</td>
                                             <td class="align-middle text-start">${task.title}</td>
                                             <td class="align-middle text-center">
-                                                <form action="${pageContext.request.contextPath}/manager/tasks" method="POST">
+                                                <form action="${pageContext.request.contextPath}/user/assigned-tasks" method="POST">
                                                     <input type="hidden" name="task_id" value="${task.id}" />
                                                     <div class="dropdown">
                                                         <button class="btn  btn-sm dropdown-toggle ${task.status == 'DONE' ? 'success' : task.status == 'IN_PROGRESS' ? 'primary' : 'warning'}" type="button" id="statusDropdown${task.id}" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 5px !important;">
@@ -391,7 +403,7 @@
                                                          style="object-fit: cover; width: 40px; height: 40px;">
                                                     <div class="d-flex flex-column align-items-start ms-2">
                                                         <span class="text-secondary text-xs font-weight-bold">${task.manager.username}</span>
-                                                        <span class="text-secondary text-xs">Manager</span>
+                                                        <span class="text-secondary text-xs">-----</span>
                                                     </div>
                                                 </div>
                                             </td>
