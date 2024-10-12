@@ -1,5 +1,6 @@
 package org.example.services.manager;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.servlet.http.HttpServlet;
 import org.example.exceptions.UserNotFoundException;
 import org.example.models.User;
@@ -26,10 +27,13 @@ public class ManagerService{
         userValidator.validateUsername(username);
         userValidator.validateEmail(email);
         userValidator.validatePassword(password);
+
+        String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(hashedPassword);
         user.setRole(UserRole.valueOf(role));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());

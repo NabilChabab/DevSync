@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.models.Task;
 import org.example.models.User;
+import org.example.models.enums.Status;
 import org.example.repository.TaskRepositoryImpl;
 import org.example.repository.interfaces.TaskRepository;
 
@@ -30,5 +31,18 @@ public class AssignedTasksController extends HttpServlet {
         request.setAttribute("tasks", tasks);
         request.setAttribute("lastTasks", lastTasks);
         request.getRequestDispatcher("/views/user/assignedTasks.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getSession().setAttribute("success", "Task updated successfully!");
+        updateStatus(request);
+        response.sendRedirect(request.getContextPath() + "/user/assigned-tasks");
+    }
+
+    private void updateStatus(HttpServletRequest request) {
+        Long taskId = Long.parseLong(request.getParameter("task_id"));
+        Status status = Status.valueOf(request.getParameter("status"));
+        taskRepository.updateStatus(status, taskId);
     }
 }

@@ -11,6 +11,7 @@ import org.example.models.enums.UserRole;
 import org.example.repository.interfaces.TagRepository;
 import org.example.repository.interfaces.TaskRepository;
 import org.example.repository.interfaces.UserRepository;
+import org.example.scheduler.TaskStatusScheduler;
 import org.example.validation.TaskValidator;
 
 import java.io.IOException;
@@ -32,11 +33,13 @@ public class TaskService {
     private final TagRepository tagRepository;
     private final TaskValidator taskValidator;
 
+
     public TaskService(TaskRepository taskRepository, UserRepository userRepository, TagRepository tagRepository, TaskValidator taskValidator) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.tagRepository = tagRepository;
         this.taskValidator = taskValidator;
+
     }
 
     public List<User> getUsersByRole(UserRole role) {

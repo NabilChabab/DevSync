@@ -17,6 +17,7 @@ import org.example.repository.UserRepositoryImpl;
 import org.example.repository.interfaces.TagRepository;
 import org.example.repository.interfaces.TaskRepository;
 import org.example.repository.interfaces.UserRepository;
+import org.example.services.manager.TaskService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +44,7 @@ public class UserController extends HttpServlet {
     private TagRepository tagRepository = new TagRepositoryImpl();
 
 
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
@@ -59,8 +61,14 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        if (request.getParameter("status") != null) {
+            request.getSession().setAttribute("success", "Task updated successfully!");
+            updateStatus(request);
+            response.sendRedirect(request.getContextPath() + "/user/dashboard");
+        }
+        else {
             save(request, response);
+        }
     }
 
     public void save(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -174,6 +182,12 @@ public class UserController extends HttpServlet {
         taskRepository.delete(id);
         request.getSession().setAttribute("success", "Task deleted successfully!");
         response.sendRedirect(request.getContextPath() + "/manager/tasks");
+    }
+
+    private void updateStatus(HttpServletRequest request) {
+        Long taskId = Long.parseLong(request.getParameter("task_id"));
+        Status status = Status.valueOf(request.getParameter("status"));
+        taskRepository.updateStatus(status, taskId);
     }
 
 

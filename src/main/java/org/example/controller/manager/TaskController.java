@@ -20,6 +20,7 @@ import org.example.repository.interfaces.TaskRepository;
 import org.example.repository.TaskRepositoryImpl;
 import org.example.repository.UserRepositoryImpl;
 import org.example.repository.interfaces.UserRepository;
+import org.example.scheduler.TaskStatusScheduler;
 import org.example.services.manager.TaskService;
 import org.example.validation.TaskValidator;
 
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 public class TaskController extends HttpServlet {
 
     private TaskService taskService;
+
 
     public TaskController() {
         TaskRepository taskRepository = new TaskRepositoryImpl();
