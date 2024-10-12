@@ -5,14 +5,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.scheduler.TaskStatusScheduler;
+import org.example.services.manager.TaskService;
 
 import java.io.IOException;
 
 
-public class Main extends HttpServlet {
+public class Main{
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/auth/login");
-    }
 }
