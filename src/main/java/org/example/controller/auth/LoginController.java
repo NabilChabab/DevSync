@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.example.models.User;
 import org.example.repository.UserRepositoryImpl;
 import org.example.repository.interfaces.UserRepository;
+import org.example.scheduler.TaskStatusScheduler;
 
 
 import java.io.IOException;
@@ -17,19 +18,19 @@ import java.io.IOException;
 @WebServlet(name = "LoginController", value = "/auth/login")
 public class LoginController extends HttpServlet {
 
+
+
     private UserRepository userRepository = new UserRepositoryImpl();
+    private TaskStatusScheduler scheduler;
+
+    @Override
+    public void init() throws ServletException {
+        this.scheduler = new TaskStatusScheduler();
+        this.scheduler.startScheduler();
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       login(request, response);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
-    }
-
-    public void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -65,6 +66,15 @@ public class LoginController extends HttpServlet {
             request.setAttribute("loginError", "Invalid email or password.");
             request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
         }
+    }
+
+
+
+
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
