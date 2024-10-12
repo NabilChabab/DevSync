@@ -123,6 +123,18 @@
     .file-upload-label .icon {
         margin-right: 8px; /* Space between icon and text */
     }
+    .success{
+        background-color: #D9FDEF !important;
+        color: #216E64 !important;
+    }
+    .warning{
+        background-color: #F1F2F4 !important;
+        color: #172B4D !important;
+    }
+    .primary {
+        background-color: #D6E4FF !important;
+        color: #2B44BD !important;
+    }
 </style>
 <body class="g-sidenav-show" style="background-color:white;">
 <div class="min-height-300 position-absolute w-100" style="background-color: #5E72E4"></div>
@@ -288,7 +300,7 @@
                         </div>
                         <div class="card-body px-0 pt-0 pb-2">
                             <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0" style="height: auto">
+                                <table class="table align-items-center mb-0">
                                     <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -326,9 +338,25 @@
                                             <td>${task.id}</td>
                                             <td class="align-middle text-start">${task.title}</td>
                                             <td class="align-middle text-center">
-                                                 <span class="badge badge-sm ${task.status == 'DONE' ? 'bg-gradient-success' : task.status == 'IN_PROGRESS' ? 'bg-gradient-primary' : 'bg-gradient-warning'}">
-                                                         ${task.status}
-                                                 </span>
+                                                <form action="${pageContext.request.contextPath}/user/dashboard" method="POST">
+                                                    <input type="hidden" name="task_id" value="${task.id}" />
+                                                    <div class="dropdown">
+                                                        <button class="btn  btn-sm dropdown-toggle ${task.status == 'DONE' ? 'success' : task.status == 'IN_PROGRESS' ? 'primary' : 'warning'}" type="button" id="statusDropdown${task.id}" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 5px !important;">
+                                                                ${task.status}
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="statusDropdown${task.id}" >
+                                                            <li class="text-center">
+                                                                <button class="dropdown-item text-dark font-weight-bold" type="submit" name="status" value="TODO">Todo</button>
+                                                            </li>
+                                                            <li class="text-center">
+                                                                <button class="dropdown-item text-primary font-weight-bold" type="submit" name="status" value="IN_PROGRESS">Inprogress</button>
+                                                            </li>
+                                                            <li class="text-center">
+                                                                <button class="dropdown-item text-success font-weight-bold" type="submit" name="status" value="DONE">Done</button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </form>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span class="text-secondary text-xs font-weight-bold">${task.startDate}</span>

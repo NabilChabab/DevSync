@@ -23,18 +23,11 @@ public class Token {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id", nullable = false)
-    private Task task;
-
     @Column(name = "modify_token_count", nullable = false)
     private int modifyTokenCount;
 
     @Column(name = "delete_token_count", nullable = false)
     private int deleteTokenCount;
-
-    @Column(name = "type", nullable = false)
-    private TokenType type;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -42,22 +35,20 @@ public class Token {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Token(User user, Task task, int modifyTokenCount, int deleteTokenCount) {
+    public Token(User user, int modifyTokenCount, int deleteTokenCount) {
         this.user = user;
-        this.task = task;
         this.modifyTokenCount = modifyTokenCount;
         this.deleteTokenCount = deleteTokenCount;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Token(User user, Task task) {
-        this(user, task, 2, 1);
+    public Token(User user) {
+        this(user, 2, 1);
     }
 
-    public Token(User user, Task task, int modifyTokenCount, int deleteTokenCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Token(User user,int modifyTokenCount, int deleteTokenCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.user = user;
-        this.task = task;
         this.modifyTokenCount = modifyTokenCount;
         this.deleteTokenCount = deleteTokenCount;
         this.createdAt = createdAt;
