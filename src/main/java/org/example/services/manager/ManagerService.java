@@ -3,8 +3,10 @@ package org.example.services.manager;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.servlet.http.HttpServlet;
 import org.example.exceptions.UserNotFoundException;
+import org.example.models.Token;
 import org.example.models.User;
 import org.example.models.enums.UserRole;
+import org.example.repository.interfaces.TokenRepository;
 import org.example.repository.interfaces.UserRepository;
 import org.example.validation.UserValidator;
 
@@ -17,10 +19,12 @@ public class ManagerService{
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
+    private TokenRepository tokenRepository;
 
-    public ManagerService(UserRepository userRepository, UserValidator userValidator) {
+    public ManagerService(UserRepository userRepository, UserValidator userValidator , TokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
+        this.tokenRepository = tokenRepository;
     }
 
     public void saveUser(String username, String email, String password, String role, String filName) {
@@ -40,6 +44,8 @@ public class ManagerService{
         user.setProfile(filName);
 
         userRepository.save(user);
+        Token token = new Token(user, 2, 1);
+        tokenRepository.save(token);
     }
 
     public void updateUser(Long id, String username, String email) {

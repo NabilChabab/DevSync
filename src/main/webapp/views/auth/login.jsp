@@ -165,7 +165,7 @@
                                     <p class="mb-0 text-secondary">Enter your email and password to sign in</p>
                                 </div>
                                 <div class="card-body">
-                                    <form action="login" method="POST" id="form">
+                                    <form action="${pageContext.request.contextPath}/auth/login" method="POST" id="form">
                                         <div class="mb-3 form-outline">
                                             <input
                                                     type="email"

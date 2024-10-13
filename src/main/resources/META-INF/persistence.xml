@@ -8,6 +8,7 @@
         <class>org.example.models.Tag</class>
         <class>org.example.models.Task</class>
         <class>org.example.models.Token</class>
+        <class>org.example.models.TokenRequest</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/dev_sync"/>

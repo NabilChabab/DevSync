@@ -55,5 +55,15 @@ public class Token {
         this.updatedAt = updatedAt;
     }
 
-
+    @Override
+    public String toString() {
+        return "Token{" +
+                "id=" + id +
+                // Exclude user to prevent circular reference
+                ", modifyTokenCount=" + modifyTokenCount +
+                ", deleteTokenCount=" + deleteTokenCount +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

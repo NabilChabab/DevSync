@@ -11,6 +11,7 @@ import org.example.models.User;
 import org.example.repository.UserRepositoryImpl;
 import org.example.repository.interfaces.UserRepository;
 import org.example.scheduler.TaskStatusScheduler;
+import org.example.scheduler.TokenModifyScheduler;
 
 
 import java.io.IOException;
@@ -22,11 +23,14 @@ public class LoginController extends HttpServlet {
 
     private UserRepository userRepository = new UserRepositoryImpl();
     private TaskStatusScheduler scheduler;
+    private TokenModifyScheduler tokenModifyScheduler;
 
     @Override
     public void init() throws ServletException {
         this.scheduler = new TaskStatusScheduler();
         this.scheduler.startScheduler();
+        this.tokenModifyScheduler = new TokenModifyScheduler();
+        this.tokenModifyScheduler.startScheduler();
     }
 
     @Override

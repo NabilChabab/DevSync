@@ -4,21 +4,22 @@ package org.example.controller.manager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 import org.example.exceptions.ValidationException;
 import org.example.models.Tag;
 import org.example.models.Task;
+import org.example.models.TokenRequest;
 import org.example.models.User;
+import org.example.models.enums.Request;
 import org.example.models.enums.Status;
 import org.example.models.enums.UserRole;
 import org.example.repository.TagRepositoryImpl;
+import org.example.repository.TokenRequestImpl;
 import org.example.repository.interfaces.TagRepository;
 import org.example.repository.interfaces.TaskRepository;
 import org.example.repository.TaskRepositoryImpl;
 import org.example.repository.UserRepositoryImpl;
+import org.example.repository.interfaces.TokenRequestRepository;
 import org.example.repository.interfaces.UserRepository;
 import org.example.scheduler.TaskStatusScheduler;
 import org.example.services.manager.TaskService;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 public class TaskController extends HttpServlet {
 
     private TaskService taskService;
+    private TokenRequestRepository tokenRequestRepository = new TokenRequestImpl();
 
 
     public TaskController() {
@@ -53,8 +55,10 @@ public class TaskController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        Long userId = user.getId();
         List<User> users = taskService.getUsersByRole(UserRole.USER);
-        List<Task> tasks = taskService.getAllTasks();
+        List<Task> tasks = taskService.getAllTasksByManagerId(userId);
         List<Task> lastTasks = taskService.getLastTasks();
         List<Tag> tags = taskService.getAllTags();
 
@@ -78,7 +82,11 @@ public class TaskController extends HttpServlet {
             } else if (request.getParameter("status") != null) {
                 request.getSession().setAttribute("success", "Task updated successfully!");
                 updateStatus(request);
-            } else {
+            }else if (request.getParameter("requestType") != null) {
+                request.getSession().setAttribute("success", "Request updated successfully!");
+                updateRequestStatus(request);
+            }
+            else {
                 request.getSession().setAttribute("success", "Task saved successfully!");
                 taskService.saveTask(request);
             }
@@ -93,5 +101,20 @@ public class TaskController extends HttpServlet {
         Long taskId = Long.parseLong(request.getParameter("task_id"));
         Status status = Status.valueOf(request.getParameter("status"));
         taskService.updateStatus(status, taskId);
+    }
+
+    private void updateRequestStatus(HttpServletRequest request) {
+        Long requestId = Long.parseLong(request.getParameter("requestId"));
+        Request status = Request.valueOf(request.getParameter("requestType"));
+        tokenRequestRepository.updateStatus(requestId, status);
+        removeSessionAttribute(request);
+    }
+
+
+    private void removeSessionAttribute(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String attributeName = "tokenRequest";
+
+        session.removeAttribute(attributeName);
     }
 }
