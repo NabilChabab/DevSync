@@ -50,9 +50,19 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
+    public List<Task> getAllTasksByManagerId(Long userId) {
+        return taskRepository.findAllByManagerId(userId);
+    }
+
     public List<Task> getLastTasks() {
         return taskRepository.findLastFoor();
     }
+
+    public List<Task> getAssignedTasks(User user) {
+        return taskRepository.findAllAssignedTasks(user.getId());
+    }
+
+
 
     public List<Tag> getAllTags() {
         return tagRepository.findAll();

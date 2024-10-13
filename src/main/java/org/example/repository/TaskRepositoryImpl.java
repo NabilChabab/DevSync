@@ -179,6 +179,18 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
+    public List<Task> findAllByManagerId(Long userId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            return entityManager.createQuery("SELECT t FROM Task t WHERE t.manager.id = :userId", Task.class)
+                    .setParameter("userId", userId)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
     public List<Task> findLastFoorByUserId(Long userId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -196,7 +208,8 @@ public class TaskRepositoryImpl implements TaskRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             return entityManager.createQuery(
-                            "SELECT t FROM Task t WHERE t.user.id = :userId AND t.manager IS NOT NULL", Task.class)
+                            "SELECT t FROM Task t JOIN FETCH t.user u JOIN FETCH u.tokens token " +
+                                    "WHERE u.id = :userId AND t.manager IS NOT NULL", Task.class)
                     .setParameter("userId", userId)
                     .getResultList();
         } finally {

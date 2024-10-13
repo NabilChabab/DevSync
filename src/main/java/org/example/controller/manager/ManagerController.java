@@ -12,6 +12,8 @@ import org.example.exceptions.UserNotFoundException;
 import org.example.exceptions.ValidationException;
 import org.example.models.User;
 import org.example.models.enums.UserRole;
+import org.example.repository.TokenRepositoryImpl;
+import org.example.repository.interfaces.TokenRepository;
 import org.example.repository.interfaces.UserRepository;
 import org.example.repository.UserRepositoryImpl;
 import org.example.services.manager.ManagerService;
@@ -37,7 +39,8 @@ public class ManagerController extends HttpServlet {
     public ManagerController() {
         UserRepository userRepository = new UserRepositoryImpl();
         UserValidator userValidator = new UserValidator();
-        this.managerService = new ManagerService(userRepository, userValidator);
+        TokenRepository tokenRepository = new TokenRepositoryImpl();
+        this.managerService = new ManagerService(userRepository, userValidator , tokenRepository);
     }
 
     @Override

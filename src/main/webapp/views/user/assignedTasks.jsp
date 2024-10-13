@@ -136,6 +136,10 @@
         background-color: #D6E4FF !important;
         color: #2B44BD !important;
     }
+    .danger{
+        background-color: #FEE2E2 !important;
+        color: #C53030 !important;
+    }
 </style>
 <body class="g-sidenav-show" style="background-color:white;">
 <div class="min-height-300 position-absolute w-100" style="background-color: #5E72E4"></div>
@@ -212,10 +216,12 @@
                                 </c:otherwise>
                             </c:choose>
 
-                            <form action="../auth/login" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to logout?');">
-                                <input type="hidden" name="_logout" value="logout">
-                                <button style="border: none;border: none;background-color: transparent"><span class="d-sm-inline d-none text-white">Logout</span></button>
-                            </form>
+
+
+                                <span class="font-weight-bold">
+                                    Tokens : ${tokens[0].modifyTokenCount}
+                                </span>
+
                         </a>
                     </li>
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -240,6 +246,10 @@
 
                     </li>
                 </ul>
+                <form action="../auth/login" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to logout?');">
+                    <input type="hidden" name="_logout" value="logout">
+                    <button style="border: none;border: none;background-color: transparent"><span class="d-sm-inline d-none text-white">Logout</span></button>
+                </form>
             </div>
         </div>
     </nav>
@@ -341,7 +351,7 @@
                                                 <form action="${pageContext.request.contextPath}/user/assigned-tasks" method="POST">
                                                     <input type="hidden" name="task_id" value="${task.id}" />
                                                     <div class="dropdown">
-                                                        <button class="btn  btn-sm dropdown-toggle ${task.status == 'DONE' ? 'success' : task.status == 'IN_PROGRESS' ? 'primary' : 'warning'}" type="button" id="statusDropdown${task.id}" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 5px !important;">
+                                                        <button class="btn  btn-sm dropdown-toggle ${task.status == 'DONE' ? 'success' : task.status == 'IN_PROGRESS' ? 'primary': task.status == 'CANCELLED' ? 'danger'  : 'warning'}" type="button" id="statusDropdown${task.id}" data-bs-toggle="${task.status == 'CANCELLED' ? '' : 'dropdown'}" aria-expanded="false" style="border-radius: 5px !important;">
                                                                 ${task.status}
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="statusDropdown${task.id}">
@@ -408,9 +418,19 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle text-start">
-                                                <a href="#" class="status-badge me-3" data-bs-toggle="modal"
-                                                   data-bs-target="#updateUser">
-                                                    <button class="badge badge-sm bg-gradient-primary text-center" style="border: none" data-user_name="${user.username}" data-user_email="${user.email}"  data-user_id="${user.id}" data-bs-toggle="modal" data-bs-target="#updateUser">Take Off</button>
+                                                <a href="#" class="status-badge me-3" data-bs-toggle="modal" data-bs-target="#updateUser">
+
+                                                    <button class="badge badge-sm bg-gradient-${tokens[0].modifyTokenCount == 0 ? 'secondary' : 'primary'} text-center"
+                                                            style="border: none"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#updateUser"
+                                                            data-user_id="${task.user.id}"
+                                                            data-task_id="${task.id}"
+                                                            <c:if test="${tokens[0].modifyTokenCount == 0}">disabled="disabled"</c:if>
+                                                    >
+                                                            ${tokens[0].modifyTokenCount== 0 ? 'expired' : 'replace'}
+                                                    </button>
+
                                                 </a>
                                                 <form action="../manager/dashboard" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                     <input type="hidden" name="id" value="${user.id}">
@@ -483,13 +503,21 @@
             </div>
         </div>
         <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 100001">
-            <div class="modal-dialog" style="background-color:#161718;">
-                <div class="modal-content" style="background-color:#161718;">
-                    <div class="modal-header" style="background-color:#161718;">
-                        <h5 class="modal-title text-white" >Update User</h5>
+            <div class="modal-dialog" >
+                <div class="modal-content" >
+                    <div class="modal-header" >
+                        <h5 class="modal-title text-dark" >Request For Token</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" style="background-color:#161718;">
+                    <div class="modal-body">
+                        <form action="${pageContext.request.contextPath}/user/assigned-tasks" method="post">
+                            <div class="mb-3">
+                                <input type="hidden" name="taskId" id="taskId">
+                                <input type="hidden" name="user_id" id="userId">
+                                <textarea type="text" id="message" name="message" placeholder="Put a message here why??" class="form-control bg-transparent mb-3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="float: right">send your request</button>
+                        </form>
 
                     </div>
                 </div>
@@ -553,13 +581,7 @@
 
 
 <script src="https://cdn.tiny.cloud/1/f9ggt3dqixvgwwjjoxp3xio6hgf0r72qnuvll71z6g0sckld/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    tinymce.init({
-        selector: 'textarea',
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-    });
-</script>
+
 
 <script>
     window.onload = function() {
@@ -608,12 +630,10 @@
         $('#updateUser').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var userId = button.data('user_id');
-            var userName = button.data('user_name');
-            var userEmail = button.data('user_email');
+            var taskId = button.data('task_id');
             var modal = $(this);
-            modal.find('#user_id').val(userId);
-            modal.find('#username2').val(userName);
-            modal.find('#useremail').val(userEmail);
+            modal.find('#userId').val(userId);
+            modal.find('#taskId').val(taskId);
         });
     });
 </script>
