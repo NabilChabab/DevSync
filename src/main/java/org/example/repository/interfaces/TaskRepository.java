@@ -28,6 +28,8 @@ public interface TaskRepository {
 
     List<Task> findAllByUserId(Long userId);
 
+    List<Task> findAllByManagerId(Long userId);
+
     List<Task> findLastFoorByUserId(Long userId);
 
     List<Task> findAllAssignedTasks(Long userId);

@@ -351,7 +351,7 @@
                                                 <form action="${pageContext.request.contextPath}/manager/tasks" method="POST">
                                                     <input type="hidden" name="task_id" value="${task.id}" />
                                                     <div class="dropdown">
-                                                        <button class="btn  btn-sm dropdown-toggle ${task.status == 'DONE' ? 'success' : task.status == 'IN_PROGRESS' ? 'primary': task.status == 'CANCELLED' ? 'danger' : 'warning'}" type="button" id="statusDropdown${task.id}" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 5px !important;">
+                                                        <button class="btn  btn-sm dropdown-toggle ${task.status == 'DONE' ? 'success' : task.status == 'IN_PROGRESS' ? 'primary': task.status == 'CANCELLED' ? 'danger' : 'warning'}" type="button" id="statusDropdown${task.id}" data-bs-toggle="${task.status == 'CANCELLED' ? '' : 'dropdown'}" aria-expanded="false" style="border-radius: 5px !important;">
                                                                 ${task.status}
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="statusDropdown${task.id}">
@@ -421,6 +421,17 @@
                                                         <button type="submit" class="badge badge-sm bg-gradient-success text-center ms-5 border-0" style="border: none; display: none;width: 20px;height: 20px">
                                                             <i class="bx bx-check text-white"></i>
                                                         </button>
+                                                        <c:if test="${sessionScope.tokenRequest.task.id == task.id}">
+                                                            <a class="badge badge-sm bg-gradient-danger text-center cursor-pointer ms-5 border-0 d-flex justify-content-center align-items-center"
+                                                               data-message="${sessionScope.tokenRequest.message}"
+                                                               data-requestId="${sessionScope.tokenRequest.id}"
+                                                               data-status="${sessionScope.tokenRequest.requestType}"
+                                                               data-bs-toggle="modal"
+                                                               data-bs-target="#updateUser"
+                                                               style="border: none; width: 20px;height: 20px">
+                                                                <i class="bx bxs-circle text-white"></i>
+                                                            </a>
+                                                        </c:if>
                                                     </div>
 
 
@@ -584,14 +595,26 @@
             </div>
         </div>
         <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" style="z-index: 100001">
-            <div class="modal-dialog" style="background-color:#161718;">
-                <div class="modal-content" style="background-color:#161718;">
-                    <div class="modal-header" style="background-color:#161718;">
-                        <h5 class="modal-title text-white" >Update User</h5>
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <div class="modal-header" >
+                        <h5 class="modal-title text-dark" >Token Request</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" style="background-color:#161718;">
+                    <div class="modal-body">
+                        <form action="${pageContext.request.contextPath}/manager/tasks" method="post">
 
+                            <div class="mb-3">
+                                <input type="text" id="message" name="message" class="form-control bg-transparent mb-3 mt-3 text-dark font-weight-bold shadow-none border-0" placeholder="Message" value="${sessionScope.tokenRequest.message}">
+                                <input type="hidden" name="requestId" value="${sessionScope.tokenRequest.id}">
+                                <select name="requestType" id="requestType" class="form-control bg-transparent mb-3 mt-3 text-dark font-weight-bold shadow-none">
+                                    <option value="PENDING" ${sessionScope.tokenRequest.requestType == 'PENDING' ? 'selected' : ''}>${sessionScope.tokenRequest.requestType}</option>
+                                    <option value="ACCEPTED" ${sessionScope.tokenRequest.requestType == 'ACCEPTED' ? 'selected' : ''}>ACCEPT</option>
+                                    <option value="REJECTED" ${sessionScope.tokenRequest.requestType == 'REJECTED' ? 'selected' : ''}>REJECT</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="float: right">submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -649,11 +672,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
 <script src="https://cdn.tiny.cloud/1/f9ggt3dqixvgwwjjoxp3xio6hgf0r72qnuvll71z6g0sckld/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     tinymce.init({
@@ -671,7 +694,7 @@
                 "closeButton": true,
                 "progressBar": true,
                 "positionClass": "toast-top-right",
-                "timeOut": "2000",  // Duration on screen
+                "timeOut": "2000",
                 "extendedTimeOut": "1000",
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut",

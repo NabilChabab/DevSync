@@ -11,6 +11,13 @@ import org.example.services.manager.TaskService;
 import java.io.IOException;
 
 
-public class Main{
+@WebServlet(name = "Main", value = "/")
+public class Main extends HttpServlet {
 
+
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
+    }
 }
