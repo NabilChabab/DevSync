@@ -24,5 +24,4 @@
     <url-pattern>/user/dashboard</url-pattern>
   </servlet-mapping>
 
-
 </web-app>
