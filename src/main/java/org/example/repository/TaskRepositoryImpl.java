@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import org.example.models.Task;
+import org.example.models.Token;
 import org.example.models.User;
 import org.example.models.enums.Status;
 import org.example.repository.interfaces.TaskRepository;
@@ -81,6 +82,8 @@ public class TaskRepositoryImpl implements TaskRepository {
             transaction.begin();
             Task task = entityManager.find(Task.class, id);
             entityManager.remove(task);
+            Token token = entityManager.find(Token.class, task.getUser().getId());
+            token.setModifyTokenCount(token.getDeleteTokenCount() - 1);
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {

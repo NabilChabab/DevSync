@@ -432,10 +432,13 @@
                                                     </button>
 
                                                 </a>
-                                                <form action="../manager/dashboard" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                    <input type="hidden" name="id" value="${user.id}">
+
+
+
+                                                <form action="${pageContext.request.contextPath}/user/assigned-tasks" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                    <input type="hidden" name="id" value="${task.id}">
                                                     <input type="hidden" name="_method" value="delete">
-                                                    <button class="badge badge-sm bg-gradient-danger text-center" style="border: none">Delete</button>
+                                                    <button class="badge badge-sm bg-gradient-${tokens[0].deleteTokenCount == 0 ? 'secondary' : 'danger'} text-center" style="border: none" <c:if test="${tokens[0].deleteTokenCount == 0}">disabled="disabled"</c:if>>Delete</button>
                                                 </form>
                                             </td>
                                         </tr>

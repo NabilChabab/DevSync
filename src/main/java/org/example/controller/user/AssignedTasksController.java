@@ -53,9 +53,15 @@ public class AssignedTasksController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String method = request.getParameter("_method");
+
         if (request.getParameter("task_id") != null) {
             request.getSession().setAttribute("success", "Task updated successfully!");
             updateStatus(request);
+        } else if (method.equalsIgnoreCase("delete")) {
+            request.getSession().setAttribute("success", "Task deleted successfully!");
+            deleteTask(request);
+
         } else{
             request.getSession().setAttribute("success", "Request for token sent successfully!");
             makeRequestForToken(request, response);
@@ -78,5 +84,10 @@ public class AssignedTasksController extends HttpServlet {
         tokenRequest.setMessage(request.getParameter("message"));
         tokenRequestRepository.save(tokenRequest);
         request.getSession().setAttribute("tokenRequest", tokenRequest);
+    }
+
+    private void deleteTask(HttpServletRequest request) {
+        Long taskId = Long.parseLong(request.getParameter("id"));
+        taskRepository.delete(taskId);
     }
 }
