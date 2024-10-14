@@ -11,6 +11,7 @@ import org.example.models.User;
 import org.example.repository.UserRepositoryImpl;
 import org.example.repository.interfaces.UserRepository;
 import org.example.scheduler.TaskStatusScheduler;
+import org.example.scheduler.TokenDeleteScheduler;
 import org.example.scheduler.TokenModifyScheduler;
 
 
@@ -24,6 +25,7 @@ public class LoginController extends HttpServlet {
     private UserRepository userRepository = new UserRepositoryImpl();
     private TaskStatusScheduler scheduler;
     private TokenModifyScheduler tokenModifyScheduler;
+    private TokenDeleteScheduler tokenDeleteScheduler;
 
     @Override
     public void init() throws ServletException {
@@ -31,6 +33,8 @@ public class LoginController extends HttpServlet {
         this.scheduler.startScheduler();
         this.tokenModifyScheduler = new TokenModifyScheduler();
         this.tokenModifyScheduler.startScheduler();
+        this.tokenDeleteScheduler = new TokenDeleteScheduler();
+        this.tokenDeleteScheduler.startScheduler();
     }
 
     @Override
