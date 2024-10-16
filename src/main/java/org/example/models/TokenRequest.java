@@ -1,15 +1,14 @@
 package org.example.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.example.models.enums.Request;
 import org.example.models.enums.TokenType;
 
 @Entity
 @Table(name = "token_requests")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TokenRequest {
