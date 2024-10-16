@@ -173,7 +173,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public List<Task> findAllByUserId(Long userId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            return entityManager.createQuery("SELECT t FROM Task t WHERE t.user.id = :userId AND t.manager IS NULL", Task.class)
+            return entityManager.createQuery("SELECT t FROM Task t WHERE t.user.id = :userId AND t.manager IS NULL ORDER BY t.id DESC", Task.class)
                     .setParameter("userId", userId)
                     .getResultList();
         } finally {
@@ -185,7 +185,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public List<Task> findAllByManagerId(Long userId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            return entityManager.createQuery("SELECT t FROM Task t WHERE t.manager.id = :userId", Task.class)
+            return entityManager.createQuery("SELECT t FROM Task t WHERE t.manager.id = :userId ORDER BY t.id DESC", Task.class)
                     .setParameter("userId", userId)
                     .getResultList();
         } finally {
@@ -212,7 +212,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         try {
             return entityManager.createQuery(
                             "SELECT t FROM Task t JOIN FETCH t.user u JOIN FETCH u.tokens token " +
-                                    "WHERE u.id = :userId AND t.manager IS NOT NULL", Task.class)
+                                    "WHERE u.id = :userId AND t.manager IS NOT NULL ORDER BY t.id DESC", Task.class)
                     .setParameter("userId", userId)
                     .getResultList();
         } finally {
