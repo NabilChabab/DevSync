@@ -185,10 +185,47 @@
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
+        <div class="col-4">
+            <div class="card mb-4" style="background-color:white;height: 90%" >
+                <div class="card-header pb-0 d-flex justify-content-between align-items-center"
+                     style="background-color:white;">
+                    <h6>Filter Tasks By Period</h6>
+                    <button href="" class="btn btn-primary"  onclick="filterTasksByDate()">Filter</button>
 
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                            <tr>
+                                <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Start Date</th>
+                                <th
+                                        class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    End Date</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <td class="align-middle text-start">
+                                    <input type="date" id="filterStartDate" class="form-control bg-light">
+                                </td>
+                                <td class="align-middle text-start">
+                                    <input type="date" id="filterEndDate" class="form-control bg-light">
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row mt-4">
             <div class="row">
-                <div class="col-8">
+                <div class="col-6">
                     <div class="card mb-4" style="background-color:white;">
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center"
                              style="background-color:white;">
@@ -261,12 +298,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="card mb-4" style="background-color:white;height: 90%" >
+                <div class="col-6">
+                    <div class="card mb-4" style="background-color:white;">
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center"
                              style="background-color:white;">
-                            <h6>Filter Tasks By Period</h6>
-                            <button href="" class="btn btn-primary"  onclick="filterTasksByDate()">Filter</button>
+                            <h6>Statistics</h6>
+                            <a href="" class="btn btn-primary" data-bs-toggle="modal"
+                               data-bs-target="#addUser">Create One</a>
 
                         </div>
                         <div class="card-body px-0 pt-0 pb-2">
@@ -275,21 +313,44 @@
                                     <thead>
                                     <tr>
                                         <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Start Date</th>
+                                            Status</th>
                                         <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            End Date</th>
+                                            Progress</th>
 
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <tr>
+                                        <td class="align-middle text-start">
+                                            <span class="text-xs font-weight-bold">Today Tasks</span>
+                                        </td>
+                                        <td class="align-middle text-start">
+                                            <div class="progress" role="progressbar" style="width: 100%; height: 20px;" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar bg-warning" style="width: ${tasksToday}0%; height: 20px;">${tasksToday}%</div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle text-start">
+                                            <span class="text-xs font-weight-bold">Assigned Tasks</span>
+                                        </td>
+                                        <td class="align-middle text-start">
+                                            <div class="progress" role="progressbar" style="width: 100%; height: 20px;" aria-label="Example with label" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: ${assignedTasksCount}0%; height: 20px;">${assignedTasksCount}%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
 
                                     <tr>
                                         <td class="align-middle text-start">
-                                            <input type="date" id="filterStartDate" class="form-control bg-light">
+                                            <span class="text-xs font-weight-bold">Token Uses</span>
                                         </td>
                                         <td class="align-middle text-start">
-                                            <input type="date" id="filterEndDate" class="form-control bg-light">
+                                            <div class="progress" role="progressbar" style="width: 100%; height: 20px;" aria-label="Example with label" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar bg-success" style="width: ${tokenUses}0%; height: 20px;">${tokenUses}%</div>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -299,6 +360,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-12">
                     <div class="card mb-4" style="background-color:white;">
                         <div class="card-header pb-0 d-flex justify-content-between align-items-center"
